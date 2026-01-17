@@ -65,9 +65,6 @@ impl GetDayView {
                             (day) " " (month) ", " (year)
                         }
                     }
-                    .entry-subtitle {
-                        (weekday)
-                    }
                 }
                 .entry-controls {
                     a .button href=(EditView::url(date)) {
@@ -76,6 +73,11 @@ impl GetDayView {
                     }
                 }
                 .entry-body {
+                    p {
+                        i {
+                            (weekday)
+                        }
+                    }
                     (body)
                 }
             }
