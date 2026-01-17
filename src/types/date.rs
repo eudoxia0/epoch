@@ -9,11 +9,13 @@ use rusqlite::types::FromSqlError;
 use rusqlite::types::FromSqlResult;
 use rusqlite::types::ToSqlOutput;
 use rusqlite::types::ValueRef;
+use serde::Deserialize;
 
 use crate::error::AppError;
 
 /// A naive date.
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Deserialize)]
+#[serde(try_from = "String")]
 pub struct Date(NaiveDate);
 
 impl Date {

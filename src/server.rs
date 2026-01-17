@@ -10,6 +10,7 @@ use crate::db::create_db;
 use crate::error::Fallible;
 use crate::views::CssView;
 use crate::views::FaviconView;
+use crate::views::GetEntryView;
 use crate::views::IndexView;
 use crate::views::not_found_handler;
 
@@ -44,6 +45,7 @@ pub async fn start_server() -> Fallible<()> {
 
     let router = CssView::route(router);
     let router = FaviconView::route(router);
+    let router = GetEntryView::route(router);
     let router = IndexView::route(router);
 
     let service: IntoMakeService<Router> = router

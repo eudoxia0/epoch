@@ -1,16 +1,11 @@
 use axum::Router;
 use axum::extract::State;
-use axum::response::Html;
+use axum::response::Redirect;
 use axum::routing::get;
-use http::StatusCode;
-use maud::html;
-use rusqlite::Connection;
-use rusqlite::Transaction;
-use tokio::sync::MutexGuard;
 
-use crate::error::Fallible;
 use crate::server::ServerState;
-use crate::templates::page_template;
+use crate::types::Date;
+use crate::views::GetEntryView;
 
 pub struct IndexView {}
 
@@ -23,15 +18,8 @@ impl IndexView {
         "/"
     }
 
-    async fn handler(State(state): State<ServerState>) -> Fallible<(StatusCode, Html<String>)> {
-        let mut db: MutexGuard<'_, Connection> = state.db.lock().await;
-        let _tx: Transaction<'_> = db.transaction()?;
-        let body = html! {
-            h1 {
-                "Hello, world!"
-            }
-        };
-        let html = page_template("Hello, world!", body);
-        Ok((StatusCode::OK, Html(html.into_string())))
+    async fn handler(State(state): State<ServerState>) -> Redirect {
+        let today: Date = Date::today();
+        Redirect::to(&GetEntryView::url(today))
     }
 }
