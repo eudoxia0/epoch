@@ -5,6 +5,7 @@ use axum::response::Html;
 use axum::routing::get;
 use http::StatusCode;
 use maud::Markup;
+use maud::PreEscaped;
 use maud::html;
 use rusqlite::Connection;
 use rusqlite::Transaction;
@@ -38,9 +39,7 @@ impl GetDayView {
         let body: Markup = match maybe_day_entry {
             Some(day_entry) => {
                 html! {
-                    p {
-                        (day_entry.content.as_str())
-                    }
+                    (PreEscaped(day_entry.content.as_html()?))
                 }
             }
             None => {

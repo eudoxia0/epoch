@@ -1,3 +1,4 @@
+use markdown::Options;
 use rusqlite::ToSql;
 use rusqlite::types::FromSql;
 use rusqlite::types::FromSqlError;
@@ -29,6 +30,13 @@ impl EntryText {
     /// Return the (approximate) number of words in this entry.
     pub fn word_count(&self) -> i32 {
         i32::try_from(self.0.split_whitespace().count()).unwrap_or(i32::MAX)
+    }
+
+    /// Render the Markdown to HTML.
+    pub fn as_html(&self) -> Fallible<String> {
+        let opt = Options::gfm();
+        markdown::to_html_with_options(&self.0, &opt)
+            .map_err(|e| AppError::new(format!("Failed to render markdown: {e}")))
     }
 }
 
