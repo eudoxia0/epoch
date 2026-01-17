@@ -11,7 +11,6 @@ use crate::db::create_db;
 use crate::error::Fallible;
 use crate::views::AllView;
 use crate::views::EditDayView;
-use crate::views::FaviconView;
 use crate::views::GetDayView;
 use crate::views::IndexView;
 use crate::views::SearchView;
@@ -49,7 +48,6 @@ pub async fn start_server() -> Fallible<()> {
 
     let router = AllView::route(router);
     let router = EditDayView::route(router);
-    let router = FaviconView::route(router);
     let router = GetDayView::route(router);
     let router = IndexView::route(router);
     let router = SearchView::route(router);

@@ -3,7 +3,7 @@ use rusqlite::config::DbConfig;
 
 use crate::error::Fallible;
 
-const SCHEMA: &str = include_str!("../../res/schema.sql");
+const SCHEMA: &str = include_str!("schema.sql");
 
 /// Create a new in-memory database.
 pub fn create_db() -> Fallible<Connection> {

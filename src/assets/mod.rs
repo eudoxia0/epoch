@@ -5,23 +5,39 @@ use http::StatusCode;
 use http::header::CACHE_CONTROL;
 use http::header::CONTENT_TYPE;
 
+use crate::server::CACHE_CONTROL_IMMUTABLE;
 use crate::server::CACHE_CONTROL_NONE;
 use crate::server::CONTENT_TYPE_CSS;
+use crate::server::CONTENT_TYPE_PNG;
 use crate::server::ServerState;
 
 pub const CSS_URL: &str = "/static/style.css";
 
 pub fn route_assets(router: Router<ServerState>) -> Router<ServerState> {
-    router.route(CSS_URL, get(async || serve_css(include_str!("style.css"))))
+    router
+        .route(CSS_URL, get(css_handler))
+        .route("/favicon.ico", get(favicon_handler))
 }
 
-fn serve_css(text: &'static str) -> impl IntoResponse {
+async fn css_handler() -> impl IntoResponse {
     (
         StatusCode::OK,
         [
             (CONTENT_TYPE, CONTENT_TYPE_CSS),
             (CACHE_CONTROL, CACHE_CONTROL_NONE),
         ],
-        text,
+        include_str!("style.css"),
+    )
+}
+
+async fn favicon_handler() -> impl IntoResponse {
+    let bytes = include_bytes!("favicon.png");
+    (
+        StatusCode::OK,
+        [
+            (CONTENT_TYPE, CONTENT_TYPE_PNG),
+            (CACHE_CONTROL, CACHE_CONTROL_IMMUTABLE),
+        ],
+        bytes,
     )
 }
