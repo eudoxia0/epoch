@@ -280,7 +280,6 @@ dependencies = [
  "maud",
  "rusqlite",
  "serde",
- "serde_json",
  "tokio",
 ]
 
