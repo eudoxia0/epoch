@@ -1,4 +1,5 @@
-use markdown::Options;
+use pulldown_cmark::Options;
+use pulldown_cmark::Parser;
 use rusqlite::ToSql;
 use rusqlite::types::FromSql;
 use rusqlite::types::FromSqlError;
@@ -34,9 +35,13 @@ impl EntryText {
 
     /// Render the Markdown to HTML.
     pub fn as_html(&self) -> Fallible<String> {
-        let opt = Options::gfm();
-        markdown::to_html_with_options(&self.0, &opt)
-            .map_err(|e| AppError::new(format!("Failed to render markdown: {e}")))
+        let mut options = Options::empty();
+        options.insert(Options::ENABLE_TABLES);
+        options.insert(Options::ENABLE_SMART_PUNCTUATION);
+        let parser = Parser::new_ext(self.as_str(), options);
+        let mut html = String::new();
+        pulldown_cmark::html::push_html(&mut html, parser);
+        Ok(html)
     }
 }
 
