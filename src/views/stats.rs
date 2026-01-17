@@ -58,7 +58,7 @@ fn count_entries(tx: &Transaction<'_>) -> Fallible<i32> {
 fn count_words(tx: &Transaction<'_>) -> Fallible<i32> {
     let sql = "
         select
-            sum(word_count)
+            coalesce(sum(word_count), 0)
         from
             day_entries;
     ";

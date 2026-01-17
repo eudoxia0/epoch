@@ -2,6 +2,7 @@ use maud::DOCTYPE;
 use maud::Markup;
 use maud::html;
 
+use crate::assets::CSS_RESET_URL;
 use crate::assets::CSS_URL;
 use crate::types::Date;
 use crate::views::AllView;
@@ -18,6 +19,7 @@ pub fn page_template(title: &str, controls: Option<Markup>, body: Markup) -> Mar
             head {
                 meta charset="utf-8";
                 meta name="viewport" content="width=device-width, initial-scale=1";
+                link rel="stylesheet" href=(CSS_RESET_URL);
                 link rel="stylesheet" href=(CSS_URL);
                 title { (title) " | Epoch" }
             }

@@ -13,9 +13,12 @@ use crate::server::ServerState;
 
 pub const CSS_URL: &str = "/static/style.css";
 
+pub const CSS_RESET_URL: &str = "/static/reset.css";
+
 pub fn route_assets(router: Router<ServerState>) -> Router<ServerState> {
     router
         .route(CSS_URL, get(css_handler))
+        .route(CSS_RESET_URL, get(css_reset_handler))
         .route("/favicon.ico", get(favicon_handler))
 }
 
@@ -27,6 +30,17 @@ async fn css_handler() -> impl IntoResponse {
             (CACHE_CONTROL, CACHE_CONTROL_NONE),
         ],
         include_str!("style.css"),
+    )
+}
+
+async fn css_reset_handler() -> impl IntoResponse {
+    (
+        StatusCode::OK,
+        [
+            (CONTENT_TYPE, CONTENT_TYPE_CSS),
+            (CACHE_CONTROL, CACHE_CONTROL_NONE),
+        ],
+        include_str!("reset.css"),
     )
 }
 
