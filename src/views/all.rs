@@ -11,9 +11,10 @@ use maud::Markup;
 use maud::html;
 use rusqlite::Connection;
 use rusqlite::Transaction;
+use rusqlite::params;
 use tokio::sync::MutexGuard;
 
-use crate::db::list_all_day_entries;
+use crate::db::DayEntry;
 use crate::error::Fallible;
 use crate::server::ServerState;
 use crate::templates::page_template;
@@ -136,4 +137,29 @@ fn days_in_month(year: i32, month: u32) -> u32 {
         .and_then(|d| d.pred_opt())
         .map(|d| d.day())
         .unwrap_or(30)
+}
+
+/// List all day entries in the database, sorted by ascending date.
+fn list_all_day_entries(tx: &Transaction<'_>) -> Fallible<Vec<DayEntry>> {
+    let sql = "
+        select
+            date,
+            content
+        from
+            day_entries
+        order by
+            date asc;
+    ";
+    let mut stmt = tx.prepare(sql)?;
+    let rows = stmt.query_map(params![], |row| {
+        Ok(DayEntry {
+            date: row.get(0)?,
+            content: row.get(1)?,
+        })
+    })?;
+    let mut entries = Vec::new();
+    for entry in rows {
+        entries.push(entry?);
+    }
+    Ok(entries)
 }
