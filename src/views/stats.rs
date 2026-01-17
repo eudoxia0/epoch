@@ -37,7 +37,7 @@ impl StatsView {
                 }
             }
         };
-        let html = page_template(&"Stats", None, body);
+        let html = page_template("Stats", None, body);
         Ok((StatusCode::OK, Html(html.into_string())))
     }
 }
