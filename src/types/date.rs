@@ -1,7 +1,9 @@
 use std::fmt::Display;
 use std::fmt::Formatter;
 
+use chrono::Datelike;
 use chrono::Local;
+use chrono::Month;
 use chrono::NaiveDate;
 use rusqlite::ToSql;
 use rusqlite::types::FromSql;
@@ -27,6 +29,18 @@ impl Date {
     /// Return the date one day before this date.
     pub fn previous(self) -> Self {
         Self(self.0.pred_opt().unwrap_or(self.0))
+    }
+
+    pub fn year(self) -> i32 {
+        self.0.year()
+    }
+
+    pub fn day(self) -> u32 {
+        self.0.day()
+    }
+
+    pub fn month_name(self) -> &'static str {
+        Month::try_from(self.0.month() as u8).unwrap().name()
     }
 }
 

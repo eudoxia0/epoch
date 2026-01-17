@@ -17,9 +17,9 @@ use crate::server::ServerState;
 use crate::templates::page_template;
 use crate::types::Date;
 
-pub struct GetEntryView {}
+pub struct GetDayView {}
 
-impl GetEntryView {
+impl GetDayView {
     pub fn route(router: Router<ServerState>) -> Router<ServerState> {
         router.route("/day/{date}", get(Self::handler))
     }
@@ -35,7 +35,7 @@ impl GetEntryView {
         let mut db: MutexGuard<'_, Connection> = state.db.lock().await;
         let tx: Transaction<'_> = db.transaction()?;
         let maybe_day_entry: Option<DayEntry> = get_day_entry(&tx, date)?;
-        let entry_body: Markup = match maybe_day_entry {
+        let body: Markup = match maybe_day_entry {
             Some(day_entry) => {
                 html! {
                     p {
@@ -51,13 +51,11 @@ impl GetEntryView {
                 }
             }
         };
-        let body: Markup = html! {
-            h1 {
-                (date)
-            }
-            (entry_body)
-        };
-        let html = page_template(&date.to_string(), body);
+        let day = date.day();
+        let month = date.month_name();
+        let year = date.year();
+        let title: String = format!("{day} {month}, {year}");
+        let html = page_template(&title, body);
         Ok((StatusCode::OK, Html(html.into_string())))
     }
 }

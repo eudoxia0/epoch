@@ -4,7 +4,7 @@ use axum::routing::get;
 
 use crate::server::ServerState;
 use crate::types::Date;
-use crate::views::GetEntryView;
+use crate::views::GetDayView;
 
 pub struct IndexView {}
 
@@ -19,6 +19,6 @@ impl IndexView {
 
     async fn handler() -> Redirect {
         let today: Date = Date::today();
-        Redirect::to(&GetEntryView::url(today))
+        Redirect::to(&GetDayView::url(today))
     }
 }

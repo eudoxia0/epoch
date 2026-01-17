@@ -4,9 +4,7 @@ use maud::html;
 
 use crate::types::Date;
 use crate::views::CssView;
-use crate::views::GetEntryView;
-use crate::views::TodayIconView;
-use crate::views::YesterdayIconView;
+use crate::views::GetDayView;
 
 pub fn page_template(title: &str, body: Markup) -> Markup {
     let today: Date = Date::today();
@@ -22,38 +20,34 @@ pub fn page_template(title: &str, body: Markup) -> Markup {
             }
             body {
                 .app {
-                    .box {
-                        .box-row {
-                            .sidebar {
-                                nav {
-                                    ul {
-                                        li {
-                                            a href=(GetEntryView::url(today)) {
-                                                .icon {
-                                                    "📆"
-                                                }
-                                                .text {
-                                                    "Today"
-                                                }
-                                            }
+                    .sidebar {
+                        nav {
+                            ul {
+                                li {
+                                    a href=(GetDayView::url(today)) {
+                                        .icon {
+                                            "📆"
                                         }
-                                        li {
-                                            a href=(GetEntryView::url(yesterday)) {
-                                                .icon {
-                                                    "🗓️"
-                                                }
-                                                .text {
-                                                    "Yesterday"
-                                                }
-                                            }
+                                        .text {
+                                            "Today"
+                                        }
+                                    }
+                                }
+                                li {
+                                    a href=(GetDayView::url(yesterday)) {
+                                        .icon {
+                                            "🗓️"
+                                        }
+                                        .text {
+                                            "Yesterday"
                                         }
                                     }
                                 }
                             }
-                            .content {
-                                (body)
-                            }
                         }
+                    }
+                    .content {
+                        (body)
                     }
                 }
             }

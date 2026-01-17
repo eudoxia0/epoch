@@ -44,7 +44,35 @@ body {
     }
 }
 
+.icon-box {
+    width: 192px;
+    height: 192px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+
+    img {
+        display: block;
+        width: 144px;
+        height: 144px;
+    }
+}
+
+.title-box {
+    border-bottom: 1px solid black;
+    padding: 24px;
+    flex: 1;
+
+    h1 {
+        font-size: 48px;
+    }
+}
+
 .sidebar {
+    width: 192px;
     border-right: 1px solid black;
     padding: 24px;
 
@@ -78,4 +106,5 @@ body {
 
 .content {
     padding: 24px;
+    flex: 1;
 }

@@ -10,10 +10,8 @@ use crate::db::create_db;
 use crate::error::Fallible;
 use crate::views::CssView;
 use crate::views::FaviconView;
-use crate::views::GetEntryView;
+use crate::views::GetDayView;
 use crate::views::IndexView;
-use crate::views::TodayIconView;
-use crate::views::YesterdayIconView;
 use crate::views::not_found_handler;
 
 pub const CACHE_CONTROL_NONE: &str = "no-cache";
@@ -47,10 +45,8 @@ pub async fn start_server() -> Fallible<()> {
 
     let router = CssView::route(router);
     let router = FaviconView::route(router);
-    let router = GetEntryView::route(router);
+    let router = GetDayView::route(router);
     let router = IndexView::route(router);
-    let router = TodayIconView::route(router);
-    let router = YesterdayIconView::route(router);
 
     let service: IntoMakeService<Router> = router
         .fallback(not_found_handler)
