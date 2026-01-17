@@ -17,6 +17,7 @@ use crate::error::Fallible;
 use crate::server::ServerState;
 use crate::templates::page_template;
 use crate::types::Date;
+use crate::views::EditView;
 
 pub struct GetDayView {}
 
@@ -66,6 +67,12 @@ impl GetDayView {
                     }
                     .entry-subtitle {
                         (weekday)
+                    }
+                }
+                .entry-controls {
+                    a .button href=(EditView::url(date)) {
+                        .icon { "✏️" }
+                        "Edit"
                     }
                 }
                 .entry-body {
