@@ -42,6 +42,10 @@ impl Date {
     pub fn month_name(self) -> &'static str {
         Month::try_from(self.0.month() as u8).unwrap().name()
     }
+
+    pub fn weekday(self) -> String {
+        self.0.weekday().to_string()
+    }
 }
 
 impl Display for Date {

@@ -46,7 +46,9 @@ impl GetDayView {
             None => {
                 html! {
                     p {
-                        "No entry for this date."
+                        i {
+                            "No entry for this date."
+                        }
                     }
                 }
             }
@@ -54,6 +56,22 @@ impl GetDayView {
         let day = date.day();
         let month = date.month_name();
         let year = date.year();
+        let weekday = date.weekday();
+        let body: Markup = html! {
+            .entry {
+                .entry-title {
+                    h1 {
+                        (day) " " (month) ", " (year)
+                    }
+                }
+                .entry-subtitle {
+                    (weekday)
+                }
+                .entry-body {
+                    (body)
+                }
+            }
+        };
         let title: String = format!("{day} {month}, {year}");
         let html = page_template(&title, body);
         Ok((StatusCode::OK, Html(html.into_string())))

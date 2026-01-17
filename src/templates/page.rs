@@ -16,38 +16,40 @@ pub fn page_template(title: &str, body: Markup) -> Markup {
                 meta charset="utf-8";
                 meta name="viewport" content="width=device-width, initial-scale=1";
                 link rel="stylesheet" href=(CssView::url());
-                title { (title) }
+                title { (title) " | Epoch" }
             }
             body {
                 .app {
-                    .sidebar {
-                        nav {
-                            ul {
-                                li {
-                                    a href=(GetDayView::url(today)) {
-                                        .icon {
-                                            "📆"
-                                        }
-                                        .text {
-                                            "Today"
+                    .box {
+                        .sidebar {
+                            nav {
+                                ul {
+                                    li {
+                                        a href=(GetDayView::url(today)) {
+                                            .icon {
+                                                "📆"
+                                            }
+                                            .text {
+                                                "Today"
+                                            }
                                         }
                                     }
-                                }
-                                li {
-                                    a href=(GetDayView::url(yesterday)) {
-                                        .icon {
-                                            "🗓️"
-                                        }
-                                        .text {
-                                            "Yesterday"
+                                    li {
+                                        a href=(GetDayView::url(yesterday)) {
+                                            .icon {
+                                                "🗓️"
+                                            }
+                                            .text {
+                                                "Yesterday"
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
-                    .content {
-                        (body)
+                        .content {
+                            (body)
+                        }
                     }
                 }
             }
