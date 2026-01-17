@@ -7,6 +7,7 @@ mod db;
 mod error;
 mod server;
 mod templates;
+mod types;
 mod views;
 
 #[tokio::main(flavor = "current_thread")]
