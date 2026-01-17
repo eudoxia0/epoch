@@ -8,9 +8,9 @@ use tokio::sync::Mutex;
 
 use crate::db::create_db;
 use crate::error::Fallible;
-use crate::views::AllEntriesView;
+use crate::views::AllView;
 use crate::views::CssView;
-use crate::views::EditView;
+use crate::views::EditDayView;
 use crate::views::FaviconView;
 use crate::views::GetDayView;
 use crate::views::IndexView;
@@ -51,9 +51,9 @@ pub async fn start_server() -> Fallible<()> {
     let router = FaviconView::route(router);
     let router = GetDayView::route(router);
     let router = IndexView::route(router);
-    let router = EditView::route(router);
+    let router = EditDayView::route(router);
     let router = StatsView::route(router);
-    let router = AllEntriesView::route(router);
+    let router = AllView::route(router);
     let router = SearchView::route(router);
 
     let service: IntoMakeService<Router> = router

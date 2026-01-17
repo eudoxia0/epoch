@@ -25,9 +25,9 @@ use crate::types::Date;
 use crate::types::EntryText;
 use crate::views::GetDayView;
 
-pub struct EditView {}
+pub struct EditDayView {}
 
-impl EditView {
+impl EditDayView {
     pub fn route(router: Router<ServerState>) -> Router<ServerState> {
         router
             .route("/day/{date}/edit", get(Self::get_handler))

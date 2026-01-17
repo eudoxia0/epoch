@@ -19,9 +19,9 @@ use crate::server::ServerState;
 use crate::templates::page_template;
 use crate::types::Date;
 
-pub struct AllEntriesView {}
+pub struct AllView {}
 
-impl AllEntriesView {
+impl AllView {
     pub fn route(router: Router<ServerState>) -> Router<ServerState> {
         router.route(Self::url(), get(Self::handler))
     }

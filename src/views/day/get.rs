@@ -17,7 +17,7 @@ use crate::error::Fallible;
 use crate::server::ServerState;
 use crate::templates::page_template;
 use crate::types::Date;
-use crate::views::EditView;
+use crate::views::EditDayView;
 
 pub struct GetDayView {}
 
@@ -65,7 +65,7 @@ impl GetDayView {
             }
         };
         let controls = html! {
-            a .button href=(EditView::url(date)) {
+            a .button href=(EditDayView::url(date)) {
                 .icon { "✏️" }
                 "Edit"
             }
