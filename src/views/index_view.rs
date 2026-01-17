@@ -1,5 +1,4 @@
 use axum::Router;
-use axum::extract::State;
 use axum::response::Redirect;
 use axum::routing::get;
 
