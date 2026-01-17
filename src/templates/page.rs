@@ -44,6 +44,16 @@ pub fn page_template(title: &str, body: Markup) -> Markup {
                                             }
                                         }
                                     }
+                                    li {
+                                        a href=(GetDayView::url(yesterday)) {
+                                            .icon {
+                                                "🗓️"
+                                            }
+                                            .text {
+                                                "All Entries"
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
