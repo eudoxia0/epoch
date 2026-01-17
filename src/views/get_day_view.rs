@@ -59,13 +59,15 @@ impl GetDayView {
         let weekday = date.weekday();
         let body: Markup = html! {
             .entry {
-                .entry-title {
-                    h1 {
-                        (day) " " (month) ", " (year)
+                .entry-header {
+                    .entry-title {
+                        h1 {
+                            (day) " " (month) ", " (year)
+                        }
                     }
-                }
-                .entry-subtitle {
-                    (weekday)
+                    .entry-subtitle {
+                        (weekday)
+                    }
                 }
                 .entry-body {
                     (body)

@@ -5,6 +5,7 @@ use chrono::Datelike;
 use chrono::Local;
 use chrono::Month;
 use chrono::NaiveDate;
+use chrono::Weekday;
 use rusqlite::ToSql;
 use rusqlite::types::FromSql;
 use rusqlite::types::FromSqlError;
@@ -43,8 +44,16 @@ impl Date {
         Month::try_from(self.0.month() as u8).unwrap().name()
     }
 
-    pub fn weekday(self) -> String {
-        self.0.weekday().to_string()
+    pub fn weekday(self) -> &'static str {
+        match self.0.weekday() {
+            Weekday::Sun => "Sunday",
+            Weekday::Mon => "Monday",
+            Weekday::Tue => "Teusday",
+            Weekday::Wed => "Wednesday",
+            Weekday::Thu => "Thursday",
+            Weekday::Fri => "Friday",
+            Weekday::Sat => "Saturday",
+        }
     }
 }
 
