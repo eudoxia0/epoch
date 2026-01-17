@@ -1,35 +1,44 @@
+use axum::Form;
 use axum::Router;
 use axum::extract::Path;
 use axum::extract::State;
 use axum::response::Html;
+use axum::response::Redirect;
 use axum::routing::get;
+use axum::routing::post;
 use http::StatusCode;
 use maud::Markup;
 use maud::html;
 use rusqlite::Connection;
 use rusqlite::Transaction;
+use serde::Deserialize;
 use tokio::sync::MutexGuard;
 
 use crate::db::DayEntry;
+use crate::db::create_day_entry;
 use crate::db::get_day_entry;
+use crate::db::update_day_entry;
 use crate::error::Fallible;
 use crate::server::ServerState;
 use crate::templates::page_template;
 use crate::types::Date;
+use crate::types::EntryText;
 use crate::views::GetDayView;
 
 pub struct EditView {}
 
 impl EditView {
     pub fn route(router: Router<ServerState>) -> Router<ServerState> {
-        router.route("/day/{date}/edit", get(Self::handler))
+        router
+            .route("/day/{date}/edit", get(Self::get_handler))
+            .route("/day/{date}/edit", post(Self::post_handler))
     }
 
     pub fn url(date: Date) -> String {
         format!("/day/{date}/edit")
     }
 
-    async fn handler(
+    async fn get_handler(
         State(state): State<ServerState>,
         Path(date): Path<Date>,
     ) -> Fallible<(StatusCode, Html<String>)> {
@@ -79,4 +88,25 @@ impl EditView {
         let html = page_template(&title, body);
         Ok((StatusCode::OK, Html(html.into_string())))
     }
+
+    async fn post_handler(
+        State(state): State<ServerState>,
+        Path(date): Path<Date>,
+        Form(form): Form<FormData>,
+    ) -> Fallible<Redirect> {
+        let content: EntryText = EntryText::new(form.content)?;
+        let mut db: MutexGuard<'_, Connection> = state.db.lock().await;
+        let tx: Transaction<'_> = db.transaction()?;
+        match get_day_entry(&tx, date)? {
+            Some(_) => update_day_entry(&tx, date, &content)?,
+            None => create_day_entry(&tx, date, &content)?,
+        };
+        tx.commit()?;
+        Ok(Redirect::to(&GetDayView::url(date)))
+    }
+}
+
+#[derive(Deserialize)]
+struct FormData {
+    content: String,
 }
