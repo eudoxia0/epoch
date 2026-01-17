@@ -1,5 +1,7 @@
 # epoch
 
+[![test](https://github.com/eudoxia0/epoch/actions/workflows/test.yaml/badge.svg)](https://github.com/eudoxia0/epoch/actions/workflows/test.yaml)
+
 A self-hosted journal app.
 
 ## License
