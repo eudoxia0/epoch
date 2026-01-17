@@ -22,26 +22,34 @@ pub fn page_template(title: &str, body: Markup) -> Markup {
             }
             body {
                 .app {
-                    .sidebar {
-                        nav {
-                            ul {
-                                li {
-                                    a href=(GetEntryView::url(today)) {
-                                        img src=(TodayIconView::url());
-                                        "Today"
-                                    }
-                                }
-                                li {
-                                    a href=(GetEntryView::url(yesterday)) {
-                                        img src=(YesterdayIconView::url());
-                                        "Yesterday"
+                    .box {
+                        .box-row {
+                            .sidebar {
+                                nav {
+                                    ul {
+                                        li {
+                                            a href=(GetEntryView::url(today)) {
+                                                img src=(TodayIconView::url());
+                                                .text {
+                                                    "Today"
+                                                }
+                                            }
+                                        }
+                                        li {
+                                            a href=(GetEntryView::url(yesterday)) {
+                                                img src=(YesterdayIconView::url());
+                                                .text {
+                                                    "Yesterday"
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
+                            .content {
+                                (body)
+                            }
                         }
-                    }
-                    .content {
-                        (body)
                     }
                 }
             }
