@@ -53,16 +53,13 @@ impl GetDayView {
                 }
             }
         };
-        let day = date.day();
-        let month = date.month_name();
-        let year = date.year();
         let weekday = date.weekday();
         let body: Markup = html! {
             .entry {
                 .entry-header {
                     .entry-title {
                         h1 {
-                            (day) " " (month) ", " (year)
+                            (date.humanize())
                         }
                     }
                 }
@@ -82,8 +79,7 @@ impl GetDayView {
                 }
             }
         };
-        let title: String = format!("{day} {month}, {year}");
-        let html = page_template(&title, body);
+        let html = page_template(&date.humanize(), body);
         Ok((StatusCode::OK, Html(html.into_string())))
     }
 }

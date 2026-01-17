@@ -36,11 +36,7 @@ impl Date {
         self.0.year()
     }
 
-    pub fn day(self) -> u32 {
-        self.0.day()
-    }
-
-    pub fn month_name(self) -> &'static str {
+    fn month_name(self) -> &'static str {
         Month::try_from(self.0.month() as u8).unwrap().name()
     }
 
@@ -54,6 +50,14 @@ impl Date {
             Weekday::Fri => "Friday",
             Weekday::Sat => "Saturday",
         }
+    }
+
+    /// Render the date like "17 January, 2026".
+    pub fn humanize(self) -> String {
+        let day = self.0.day();
+        let month = self.month_name();
+        let year = self.year();
+        format!("{day} {month}, {year}")
     }
 }
 
