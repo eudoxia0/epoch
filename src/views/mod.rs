@@ -1,5 +1,5 @@
 mod all_entries_view;
-mod css_view;
+mod css;
 mod edit_view;
 mod favicon_view;
 mod get_day_view;
@@ -9,7 +9,7 @@ mod search;
 mod stats_view;
 
 pub use all_entries_view::AllEntriesView;
-pub use css_view::CssView;
+pub use css::CssView;
 pub use edit_view::*;
 pub use favicon_view::FaviconView;
 pub use get_day_view::GetDayView;
