@@ -2,9 +2,13 @@ use maud::DOCTYPE;
 use maud::Markup;
 use maud::html;
 
+use crate::types::Date;
 use crate::views::CssView;
+use crate::views::GetEntryView;
 
 pub fn page_template(title: &str, body: Markup) -> Markup {
+    let today: Date = Date::today();
+    let yesterday: Date = today.previous();
     html! {
         (DOCTYPE)
         html lang="en" {
@@ -15,7 +19,25 @@ pub fn page_template(title: &str, body: Markup) -> Markup {
                 title { (title) }
             }
             body {
-                (body)
+                .app {
+                    .sidebar {
+                        nav {
+                            ul {
+                                li {
+                                    a href=(GetEntryView::url(today)) {
+                                        "Today"
+                                    }
+                                    a href=(GetEntryView::url(yesterday)) {
+                                        "Yesterday"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .content {
+                        (body)
+                    }
+                }
             }
         }
     }
