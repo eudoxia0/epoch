@@ -6,7 +6,7 @@ mod get_day_view;
 mod index;
 mod not_found_handler;
 mod search;
-mod stats_view;
+mod stats;
 
 pub use all_entries_view::AllEntriesView;
 pub use css::CssView;
@@ -16,4 +16,4 @@ pub use get_day_view::GetDayView;
 pub use index::IndexView;
 pub use not_found_handler::not_found_handler;
 pub use search::*;
-pub use stats_view::StatsView;
+pub use stats::StatsView;
