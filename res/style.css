@@ -50,25 +50,25 @@ body {
 
     nav {
         ul {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+
             li {
                 list-style-type: none;
-                margin-bottom: 12px;
 
                 a {
                     display: flex;
                     flex-direction: row;
                     align-items: center;
 
-                    img {
-                        width: 24px;
-                        height: 24px;
-                        display: block;
+                    .icon {
+                        font-size: 28px;
                     }
 
                     .text {
                         padding-left: 12px;
-                        font-size: 20px;
-                        line-height: 24px;
+                        font-size: 24px;
                     }
                 }
             }

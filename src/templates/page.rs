@@ -29,7 +29,9 @@ pub fn page_template(title: &str, body: Markup) -> Markup {
                                     ul {
                                         li {
                                             a href=(GetEntryView::url(today)) {
-                                                img src=(TodayIconView::url());
+                                                .icon {
+                                                    "📆"
+                                                }
                                                 .text {
                                                     "Today"
                                                 }
@@ -37,7 +39,9 @@ pub fn page_template(title: &str, body: Markup) -> Markup {
                                         }
                                         li {
                                             a href=(GetEntryView::url(yesterday)) {
-                                                img src=(YesterdayIconView::url());
+                                                .icon {
+                                                    "🗓️"
+                                                }
                                                 .text {
                                                     "Yesterday"
                                                 }
