@@ -18,7 +18,7 @@ impl IndexView {
         "/"
     }
 
-    async fn handler(State(state): State<ServerState>) -> Redirect {
+    async fn handler() -> Redirect {
         let today: Date = Date::today();
         Redirect::to(&GetEntryView::url(today))
     }
