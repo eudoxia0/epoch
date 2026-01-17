@@ -30,6 +30,8 @@ pub fn page_template(title: &str, body: Markup) -> Markup {
                                         img src=(TodayIconView::url());
                                         "Today"
                                     }
+                                }
+                                li {
                                     a href=(GetEntryView::url(yesterday)) {
                                         img src=(YesterdayIconView::url());
                                         "Yesterday"
