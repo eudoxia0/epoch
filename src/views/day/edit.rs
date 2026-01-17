@@ -111,7 +111,7 @@ fn update_day_entry(tx: &Transaction<'_>, date: Date, content: &EntryText) -> Fa
     let word_count: i32 = content.word_count();
     let sql = "
         update day_entries set
-            content    = ?2
+            content    = ?2,
             word_count = ?3
         where
             date = ?1;
