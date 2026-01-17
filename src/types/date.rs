@@ -44,7 +44,7 @@ impl Date {
         match self.0.weekday() {
             Weekday::Sun => "Sunday",
             Weekday::Mon => "Monday",
-            Weekday::Tue => "Teusday",
+            Weekday::Tue => "Tuesday",
             Weekday::Wed => "Wednesday",
             Weekday::Thu => "Thursday",
             Weekday::Fri => "Friday",
