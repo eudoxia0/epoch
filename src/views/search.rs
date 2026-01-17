@@ -54,15 +54,17 @@ impl SearchView {
             None => html! {},
         };
         let body: Markup = html! {
-            form method="GET" {
-                input type="text" name="q" value=(q.unwrap_or("".to_string()));
-                button type="Submit" {
-                    "Search"
+            .search-page {
+                form method="GET" {
+                    input type="text" name="q" value=(q.unwrap_or("".to_string())) autofocus;
+                    button type="Submit" {
+                        "Search"
+                    }
                 }
+                (results)
             }
-            (results)
         };
-        let html = page_template("Search", body);
+        let html = page_template("Search", None, body);
         Ok((StatusCode::OK, Html(html.into_string())))
     }
 }

@@ -55,31 +55,22 @@ impl GetDayView {
         };
         let weekday = date.weekday();
         let body: Markup = html! {
-            .entry {
-                .entry-header {
-                    .entry-title {
-                        h1 {
-                            (date.humanize())
-                        }
+            .view-entry-page {
+                p {
+                    i {
+                        (weekday)
                     }
                 }
-                .entry-controls {
-                    a .button href=(EditView::url(date)) {
-                        .icon { "✏️" }
-                        "Edit"
-                    }
-                }
-                .entry-body {
-                    p {
-                        i {
-                            (weekday)
-                        }
-                    }
-                    (body)
-                }
+                (body)
             }
         };
-        let html = page_template(&date.humanize(), body);
+        let controls = html! {
+            a .button href=(EditView::url(date)) {
+                .icon { "✏️" }
+                "Edit"
+            }
+        };
+        let html = page_template(&date.humanize(), Some(controls), body);
         Ok((StatusCode::OK, Html(html.into_string())))
     }
 }

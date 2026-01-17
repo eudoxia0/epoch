@@ -50,34 +50,25 @@ impl EditView {
             None => String::new(),
         };
         let body: Markup = html! {
-            .entry {
-                .entry-header {
-                    .entry-title {
-                        h1 {
-                            (date.humanize())
-                        }
+            .edit-entry-page {
+                form .entry-form method="POST" {
+                    textarea name="content" autofocus {
+                        (text)
                     }
-                }
-                .entry-controls {
-                    a .button href=(GetDayView::url(date)) {
-                        .icon { "🔙" }
-                        "Back"
-                    }
-                }
-                .entry-body .entry-edit {
-                    form .entry-form method="POST" {
-                        textarea name="content" autofocus {
-                            (text)
-                        }
-                        button .button {
-                            .icon { "💾" }
-                            "Save"
-                        }
+                    button .button {
+                        .icon { "💾" }
+                        "Save"
                     }
                 }
             }
         };
-        let html = page_template(&date.humanize(), body);
+        let controls = html! {
+            a .button href=(GetDayView::url(date)) {
+                .icon { "🔙" }
+                "Back"
+            }
+        };
+        let html = page_template(&date.humanize(), Some(controls), body);
         Ok((StatusCode::OK, Html(html.into_string())))
     }
 

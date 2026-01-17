@@ -9,7 +9,7 @@ use crate::views::GetDayView;
 use crate::views::SearchView;
 use crate::views::StatsView;
 
-pub fn page_template(title: &str, body: Markup) -> Markup {
+pub fn page_template(title: &str, controls: Option<Markup>, body: Markup) -> Markup {
     let today: Date = Date::today();
     let yesterday: Date = today.previous();
     html! {
@@ -81,7 +81,22 @@ pub fn page_template(title: &str, body: Markup) -> Markup {
                             }
                         }
                         .content {
-                            (body)
+                            .header {
+                                h1 {
+                                    (title)
+                                }
+                            }
+                            @match controls {
+                                Some(controls) => {
+                                    .page-controls {
+                                        (controls)
+                                    }
+                                }
+                                None => {}
+                            }
+                            .page-content {
+                                (body)
+                            }
                         }
                     }
                 }

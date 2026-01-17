@@ -79,104 +79,119 @@ body {
 .content {
     flex: 1;
     display: flex;
-}
-
-.entry {
-    display: flex;
     flex-direction: column;
-    flex: 1;
 
-    .entry-header {
+    .header {
         padding: 24px 96px;
         border-bottom: 1px solid #e4e4e4;
 
-        .entry-title {
-            h1 {
-                font-size: 48px;
-            }
+        h1 {
+            font-size: 48px;
         }
     }
 
-    .entry-controls {
+    .page-controls {
         padding: 12px 96px;
         border-bottom: 1px solid #e4e4e4;
     }
 
-    .entry-body {
-        padding: 24px 96px;
-        font-size: 22px;
-        line-height: 1.4;
-        overflow-y: scroll;
-        height: 100%;
+    .page-content {
+        flex: 1;
+    }
+}
 
-        line-height: 1.4;
-        text-align: justify;
+.view-entry-page {
+    padding: 24px 96px;
+    font-size: 22px;
+    line-height: 1.4;
+    overflow-y: scroll;
+    height: 100%;
 
-        em {
-            font-style: italic;
-        }
+    line-height: 1.4;
+    text-align: justify;
 
-        strong {
-            font-weight: bold;
-        }
+    em {
+        font-style: italic;
+    }
 
-        *:not(:last-child) {
-            margin-bottom: 16px;
-        }
+    strong {
+        font-weight: bold;
+    }
 
-        h1,
-        h2,
-        h3 {
-            font-weight: bold;
-        }
+    *:not(:last-child) {
+        margin-bottom: 16px;
+    }
 
-        h1 {
-            font-size: 24px;
-        }
+    h1,
+    h2,
+    h3 {
+        font-weight: bold;
+    }
 
-        h2 {
-            font-size: 18px;
-        }
+    h1 {
+        font-size: 24px;
+    }
 
-        ol {
-            list-style-type: decimal;
-        }
+    h2 {
+        font-size: 18px;
+    }
 
-        ul {
-            list-style-type: rect;
-        }
+    ol {
+        list-style-type: decimal;
+    }
 
-        li {
-            margin-left: 48px;
-            margin-right: 48px;
-        }
+    ul {
+        list-style-type: rect;
+    }
 
-        li:not(:last-child) {
-            margin-bottom: 8px;
-        }
+    li {
+        margin-left: 48px;
+        margin-right: 48px;
+    }
 
-        blockquote {
-            padding-left: 16px;
-            border-left: 2px solid #d5d5d5;
-        }
+    li:not(:last-child) {
+        margin-bottom: 8px;
+    }
 
-        pre {
-            border: 1px solid #d5d5d5;
-            padding: 8px;
-            background: #fafafa;
-        }
+    blockquote {
+        padding-left: 16px;
+        border-left: 2px solid #d5d5d5;
+    }
 
-        code {
-            font-family: "TeX Gyre Cursor";
-        }
+    pre {
+        border: 1px solid #d5d5d5;
+        padding: 8px;
+        background: #fafafa;
+    }
 
-        a {
-            color: #b1002e;
+    code {
+        font-family: "TeX Gyre Cursor";
+    }
+
+    a {
+        color: #b1002e;
+    }
+}
+
+.edit-entry-page {
+    height: 100%;
+    padding: 24px 96px;
+    display: flex;
+    flex-direction: column;
+
+    .entry-form {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        gap: 12px;
+
+        textarea {
+            flex: 1;
         }
     }
 }
 
-.all-entries {
+.all-entries-page {
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -261,23 +276,16 @@ body {
     }
 }
 
+.search-page {
+    padding: 24px 96px;
+}
+
+.stats-page {
+    padding: 24px 96px;
+}
+
 i {
     font-style: italic;
-}
-
-.entry-edit {
-    display: flex;
-    flex-direction: column;
-}
-
-.entry-form {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-
-    textarea {
-        flex: 1;
-    }
 }
 
 .button {

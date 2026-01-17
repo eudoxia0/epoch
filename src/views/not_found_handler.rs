@@ -11,6 +11,6 @@ pub async fn not_found_handler() -> Fallible<(StatusCode, Html<String>)> {
             "404 Not Found!"
         }
     };
-    let html = page_template("Not Found", body);
+    let html = page_template("Not Found", None, body);
     Ok((StatusCode::NOT_FOUND, Html(html.into_string())))
 }

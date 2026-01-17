@@ -47,10 +47,7 @@ impl AllEntriesView {
 
         // Build the calendar HTML
         let body: Markup = html! {
-            .all-entries {
-                .all-entries-header {
-                    h1 { "All Entries" }
-                }
+            .all-entries-page {
                 .all-entries-body {
                     @for year in (earliest_year..=current_year).rev() {
                         (render_year(year, &entry_dates))
@@ -59,7 +56,7 @@ impl AllEntriesView {
             }
         };
 
-        let html = page_template("All Entries", body);
+        let html = page_template("All Entries", None, body);
         Ok((StatusCode::OK, Html(html.into_string())))
     }
 }
