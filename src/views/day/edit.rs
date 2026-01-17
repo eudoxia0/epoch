@@ -11,13 +11,12 @@ use maud::Markup;
 use maud::html;
 use rusqlite::Connection;
 use rusqlite::Transaction;
+use rusqlite::params;
 use serde::Deserialize;
 use tokio::sync::MutexGuard;
 
 use crate::db::DayEntry;
-use crate::db::create_day_entry;
 use crate::db::get_day_entry;
-use crate::db::update_day_entry;
 use crate::error::Fallible;
 use crate::server::ServerState;
 use crate::templates::page_template;
@@ -92,4 +91,29 @@ impl EditDayView {
 #[derive(Deserialize)]
 struct FormData {
     content: String,
+}
+
+/// Create a day entry.
+fn create_day_entry(tx: &Transaction<'_>, date: Date, content: &EntryText) -> Fallible<()> {
+    let word_count: i32 = content.word_count();
+    let sql = "
+        insert into day_entries
+            (date, content, word_count)
+        values
+            (?1, ?2, ?3);
+    ";
+    tx.execute(sql, params![date, content, word_count])?;
+    Ok(())
+}
+
+/// Update a day entry.
+fn update_day_entry(tx: &Transaction<'_>, date: Date, content: &EntryText) -> Fallible<()> {
+    let sql = "
+        update day_entries set
+            content = ?2
+        where
+            date = ?1;
+    ";
+    tx.execute(sql, params![date, content])?;
+    Ok(())
 }
