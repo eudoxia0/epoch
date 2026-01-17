@@ -3,6 +3,7 @@ use maud::Markup;
 use maud::html;
 
 use crate::types::Date;
+use crate::views::AllEntriesView;
 use crate::views::CssView;
 use crate::views::GetDayView;
 
@@ -45,7 +46,7 @@ pub fn page_template(title: &str, body: Markup) -> Markup {
                                         }
                                     }
                                     li {
-                                        a href=(GetDayView::url(yesterday)) {
+                                        a href=(AllEntriesView::url()) {
                                             .icon {
                                                 "🗓️"
                                             }
