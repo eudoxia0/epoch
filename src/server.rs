@@ -14,6 +14,7 @@ use crate::views::EditView;
 use crate::views::FaviconView;
 use crate::views::GetDayView;
 use crate::views::IndexView;
+use crate::views::SearchView;
 use crate::views::StatsView;
 use crate::views::not_found_handler;
 
@@ -53,6 +54,7 @@ pub async fn start_server() -> Fallible<()> {
     let router = EditView::route(router);
     let router = StatsView::route(router);
     let router = AllEntriesView::route(router);
+    let router = SearchView::route(router);
 
     let service: IntoMakeService<Router> = router
         .fallback(not_found_handler)

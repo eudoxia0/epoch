@@ -6,6 +6,7 @@ use crate::types::Date;
 use crate::views::AllEntriesView;
 use crate::views::CssView;
 use crate::views::GetDayView;
+use crate::views::SearchView;
 use crate::views::StatsView;
 
 pub fn page_template(title: &str, body: Markup) -> Markup {
@@ -53,6 +54,16 @@ pub fn page_template(title: &str, body: Markup) -> Markup {
                                             }
                                             .text {
                                                 "All Entries"
+                                            }
+                                        }
+                                    }
+                                    li {
+                                        a href=(SearchView::url()) {
+                                            .icon {
+                                                "🔍"
+                                            }
+                                            .text {
+                                                "Search"
                                             }
                                         }
                                     }
