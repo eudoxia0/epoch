@@ -23,6 +23,11 @@ impl Date {
     pub fn today() -> Self {
         Self(Local::now().naive_local().date())
     }
+
+    /// Return the date one day before this date.
+    pub fn previous(self) -> Self {
+        Self(self.0.pred_opt().unwrap_or(self.0))
+    }
 }
 
 impl Display for Date {
