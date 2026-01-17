@@ -32,6 +32,9 @@ impl StatsView {
                 p {
                     "Entries: " (count_entries(&tx)?)
                 }
+                p {
+                    "Words: " (count_words(&tx)?)
+                }
             }
         };
         let html = page_template(&"Stats", body);
@@ -39,11 +42,23 @@ impl StatsView {
     }
 }
 
-/// Return the total number of entries in the database.
+/// Return the total number of entries.
 fn count_entries(tx: &Transaction<'_>) -> Fallible<i32> {
     let sql = "
         select
             count(*)
+        from
+            day_entries;
+    ";
+    let result: i32 = tx.query_one(sql, [], |row| row.get(0))?;
+    Ok(result)
+}
+
+/// Return the total number of words across all entries.
+fn count_words(tx: &Transaction<'_>) -> Fallible<i32> {
+    let sql = "
+        select
+            sum(word_count)
         from
             day_entries;
     ";
