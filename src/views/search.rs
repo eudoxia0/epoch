@@ -40,11 +40,11 @@ impl SearchView {
                 let tx: Transaction<'_> = db.transaction()?;
                 let results = search_day_entries(&tx, q)?;
                 html! {
-                    ul {
+                    .results {
                         @for date in results {
-                            li {
+                            .result {
                                 a href=(GetDayView::url(date)) {
-                                    (date)
+                                    (date.humanize())
                                 }
                             }
                         }
@@ -55,9 +55,12 @@ impl SearchView {
         };
         let body: Markup = html! {
             .search-page {
-                form method="GET" {
+                form .search-form method="GET" {
                     input type="text" name="q" value=(q.unwrap_or("".to_string())) autofocus;
-                    button type="Submit" {
+                    button .button type="Submit" {
+                        .icon {
+                            "🔍"
+                        }
                         "Search"
                     }
                 }

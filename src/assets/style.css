@@ -258,6 +258,30 @@ body {
 
 .search-page {
     padding: 24px 96px;
+
+    .search-form {
+        display: flex;
+        flex-direction: row;
+        gap: 12px;
+        margin-bottom: 24px;
+
+        input[type="text"] {
+            flex: 1;
+            font-family: "TeX Gyre Hermes";
+        }
+    }
+
+    .results {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        .result {
+            border: 1px solid #ccc;
+            padding: 12px;
+            font-size: 24px;
+        }
+    }
 }
 
 .stats-page {
