@@ -63,11 +63,22 @@ impl AllView {
 }
 
 fn render_year(year: i32, entry_dates: &HashSet<String>) -> Markup {
+    let today = Date::today();
+    let current_year = today.year();
+    let current_month = today.month();
+
+    // For the current year, only show months up to the current month
+    let max_month = if year == current_year {
+        current_month
+    } else {
+        12
+    };
+
     html! {
         .calendar-year {
             h2.year-title { (year) }
             .months-grid {
-                @for month in 1..=12u32 {
+                @for month in 1..=max_month {
                     (render_month(year, month, entry_dates))
                 }
             }
@@ -87,8 +98,14 @@ fn render_month(year: i32, month: u32, entry_dates: &HashSet<String>) -> Markup 
         None => return html! { .calendar-month { p { "Invalid month" } } },
     };
 
-    // Get the number of days in the month
-    let days_in_month = days_in_month(year, month);
+    // Get the number of days to show in the month
+    let today = Date::today();
+    let max_day = if year == today.year() && month == today.month() {
+        // For the current month, only show days up to today
+        today.day()
+    } else {
+        days_in_month(year, month)
+    };
 
     // Get the weekday of the first day (0 = Monday, 6 = Sunday in chrono)
     // We want Sunday = 0, so adjust
@@ -113,7 +130,7 @@ fn render_month(year: i32, month: u32, entry_dates: &HashSet<String>) -> Markup 
                 }
 
                 // Days of the month
-                @for day in 1..=days_in_month {
+                @for day in 1..=max_day {
                     @let date_str = format!("{:04}-{:02}-{:02}", year, month, day);
                     @let has_entry = entry_dates.contains(&date_str);
                     @let url = format!("/day/{}", date_str);

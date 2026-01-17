@@ -36,6 +36,14 @@ impl Date {
         self.0.year()
     }
 
+    pub fn month(self) -> u32 {
+        self.0.month()
+    }
+
+    pub fn day(self) -> u32 {
+        self.0.day()
+    }
+
     fn month_name(self) -> &'static str {
         Month::try_from(self.0.month() as u8).unwrap().name()
     }
