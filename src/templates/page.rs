@@ -2,9 +2,9 @@ use maud::DOCTYPE;
 use maud::Markup;
 use maud::html;
 
+use crate::assets::CSS_URL;
 use crate::types::Date;
 use crate::views::AllView;
-use crate::views::CssView;
 use crate::views::GetDayView;
 use crate::views::SearchView;
 use crate::views::StatsView;
@@ -18,7 +18,7 @@ pub fn page_template(title: &str, controls: Option<Markup>, body: Markup) -> Mar
             head {
                 meta charset="utf-8";
                 meta name="viewport" content="width=device-width, initial-scale=1";
-                link rel="stylesheet" href=(CssView::url());
+                link rel="stylesheet" href=(CSS_URL);
                 title { (title) " | Epoch" }
             }
             body {

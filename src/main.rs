@@ -2,6 +2,7 @@ use std::process::ExitCode;
 
 use crate::cli::entrypoint;
 
+mod assets;
 mod cli;
 mod db;
 mod error;

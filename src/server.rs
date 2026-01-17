@@ -6,10 +6,10 @@ use rusqlite::Connection;
 use tokio::net::TcpListener;
 use tokio::sync::Mutex;
 
+use crate::assets::route_assets;
 use crate::db::create_db;
 use crate::error::Fallible;
 use crate::views::AllView;
-use crate::views::CssView;
 use crate::views::EditDayView;
 use crate::views::FaviconView;
 use crate::views::GetDayView;
@@ -47,15 +47,15 @@ pub async fn start_server() -> Fallible<()> {
     // Build the router.
     let router: Router<ServerState> = Router::new();
 
-    let router = CssView::route(router);
+    let router = AllView::route(router);
+    let router = EditDayView::route(router);
     let router = FaviconView::route(router);
     let router = GetDayView::route(router);
     let router = IndexView::route(router);
-    let router = EditDayView::route(router);
-    let router = StatsView::route(router);
-    let router = AllView::route(router);
     let router = SearchView::route(router);
+    let router = StatsView::route(router);
 
+    let router = route_assets(router);
     let service: IntoMakeService<Router> = router
         .fallback(not_found_handler)
         .with_state(state)
