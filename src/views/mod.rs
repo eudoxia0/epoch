@@ -1,4 +1,4 @@
-mod all_entries_view;
+mod all;
 mod css;
 mod edit_view;
 mod favicon;
@@ -8,7 +8,7 @@ mod not_found_handler;
 mod search;
 mod stats;
 
-pub use all_entries_view::AllEntriesView;
+pub use all::AllEntriesView;
 pub use css::CssView;
 pub use edit_view::*;
 pub use favicon::FaviconView;
