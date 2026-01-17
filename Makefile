@@ -1,5 +1,5 @@
 BIN := epoch
-SRC := $(shell find src -name '*.rs')
+SRC := $(shell find src -name '*.rs') $(shell find src -name '*.css') $(shell find src -name '*.png')
 
 all: $(BIN)
 
