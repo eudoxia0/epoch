@@ -73,7 +73,7 @@ impl EditView {
                 }
                 .entry-body .entry-edit {
                     form .entry-form method="POST" {
-                        textarea name="content" {
+                        textarea name="content" autofocus {
                             (text)
                         }
                         button .button {
