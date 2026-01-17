@@ -30,9 +30,7 @@ impl AllEntriesView {
         "/all"
     }
 
-    async fn handler(
-        State(state): State<ServerState>,
-    ) -> Fallible<(StatusCode, Html<String>)> {
+    async fn handler(State(state): State<ServerState>) -> Fallible<(StatusCode, Html<String>)> {
         let mut db: MutexGuard<'_, Connection> = state.db.lock().await;
         let tx: Transaction<'_> = db.transaction()?;
 
