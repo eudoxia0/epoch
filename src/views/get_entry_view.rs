@@ -4,6 +4,7 @@ use axum::extract::State;
 use axum::response::Html;
 use axum::routing::get;
 use http::StatusCode;
+use maud::Markup;
 use maud::html;
 use rusqlite::Connection;
 use rusqlite::Transaction;
@@ -34,13 +35,27 @@ impl GetEntryView {
         let mut db: MutexGuard<'_, Connection> = state.db.lock().await;
         let tx: Transaction<'_> = db.transaction()?;
         let maybe_day_entry: Option<DayEntry> = get_day_entry(&tx, date)?;
-        let body = html! {
+        let entry_body: Markup = match maybe_day_entry {
+            Some(day_entry) => {
+                html! {
+                    p {
+                        (day_entry.content.as_str())
+                    }
+                }
+            }
+            None => {
+                html! {
+                    p {
+                        "No entry for this date."
+                    }
+                }
+            }
+        };
+        let body: Markup = html! {
             h1 {
                 (date)
             }
-            p {
-                (maybe_day_entry.is_some())
-            }
+            (entry_body)
         };
         let html = page_template(&date.to_string(), body);
         Ok((StatusCode::OK, Html(html.into_string())))
