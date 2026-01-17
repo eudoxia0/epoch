@@ -78,9 +78,13 @@ body {
 
 .content {
     flex: 1;
+    display: flex;
 }
 
 .entry {
+    display: flex;
+    flex-direction: column;
+
     .entry-header {
         padding: 24px;
         border-bottom: 1px solid black;
@@ -102,7 +106,73 @@ body {
         padding: 24px;
         font-size: 22px;
         line-height: 1.4;
-        overflow: scroll;
+        overflow-y: scroll;
+        height: 100%;
+
+        line-height: 1.4;
+        text-align: justify;
+
+        em {
+            font-style: italic;
+        }
+
+        strong {
+            font-weight: bold;
+        }
+
+        *:not(:last-child) {
+            margin-bottom: 16px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-weight: bold;
+        }
+
+        h1 {
+            font-size: 24px;
+        }
+
+        h2 {
+            font-size: 18px;
+        }
+
+        ol {
+            list-style-type: decimal;
+        }
+
+        ul {
+            list-style-type: rect;
+        }
+
+        li {
+            margin-left: 48px;
+            margin-right: 48px;
+        }
+
+        li:not(:last-child) {
+            margin-bottom: 8px;
+        }
+
+        blockquote {
+            padding-left: 16px;
+            border-left: 2px solid #d5d5d5;
+        }
+
+        pre {
+            border: 1px solid #d5d5d5;
+            padding: 8px;
+            background: #fafafa;
+        }
+
+        code {
+            font-family: "TeX Gyre Cursor";
+        }
+
+        a {
+            color: #b1002e;
+        }
     }
 }
 
