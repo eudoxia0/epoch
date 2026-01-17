@@ -14,6 +14,7 @@ use crate::views::EditView;
 use crate::views::FaviconView;
 use crate::views::GetDayView;
 use crate::views::IndexView;
+use crate::views::StatsView;
 use crate::views::not_found_handler;
 
 pub const CACHE_CONTROL_NONE: &str = "no-cache";
@@ -50,6 +51,7 @@ pub async fn start_server() -> Fallible<()> {
     let router = GetDayView::route(router);
     let router = IndexView::route(router);
     let router = EditView::route(router);
+    let router = StatsView::route(router);
     let router = AllEntriesView::route(router);
 
     let service: IntoMakeService<Router> = router

@@ -1,11 +1,13 @@
 create table day_entries (
     date text primary key,
-    content text not null
+    content text not null,
+    word_count integer not null
 ) strict;
 
 insert into day_entries (
     date,
-    content
+    content,
+    word_count
 ) values (
     '2026-01-17',
     'Nous, Peuple des [États-Unis](https://en.wikipedia.org/wiki/United_States), en vue de former une Union plus parfaite, d’établir la justice, de faire régner la paix intérieure, de pourvoir à la défense commune, de développer le bien-être général et d’assurer les bienfaits de la liberté à nous-mêmes et à notre postérité, nous décrétons et établissons cette Constitution pour les États-Unis d’Amérique.
@@ -36,5 +38,6 @@ Le Congrès aura le pouvoir :
 
 Aucun sénateur ou représentant ne pourra, pendant le temps pour lequel il a été élu, être nommé à une fonction civile sous l’autorité des États-Unis, qui aura été créée, ou dont les émoluments auront été augmentés pendant ce temps ; et aucune personne occupant un poste aux États-Unis ne sera membre de l’une ou l’autre des chambres pendant son maintien en fonction.
 
-Tout ordre, résolution ou vote pour lequel l’approbation du Sénat et de la Chambre des représentants peut être nécessaire (sauf sur une question d’ajournement) doit être présenté au président des États-Unis ; et avant que le même ne prenne effet, sera approuvé par lui, ou étant désapprouvé par lui, sera repassé par les deux tiers du Sénat et de la Chambre des représentants, selon les règles et limitations prescrites dans le cas d’un projet de loi.'
+Tout ordre, résolution ou vote pour lequel l’approbation du Sénat et de la Chambre des représentants peut être nécessaire (sauf sur une question d’ajournement) doit être présenté au président des États-Unis ; et avant que le même ne prenne effet, sera approuvé par lui, ou étant désapprouvé par lui, sera repassé par les deux tiers du Sénat et de la Chambre des représentants, selon les règles et limitations prescrites dans le cas d’un projet de loi.',
+    668
 );
