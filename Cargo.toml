@@ -1,0 +1,24 @@
+[package]
+name = "epoch"
+version = "0.1.0"
+edition = "2024"
+description = "A self-hosted journal app."
+license = "MIT"
+homepage = "https://github.com/eudoxia0/epoch"
+repository = "https://github.com/eudoxia0/epoch"
+
+[dependencies]
+axum = { version = "0.8.8", features = ["form", "multipart"] }
+clap = { version = "4.5.54", features = ["derive"] }
+env_logger = "0.11.8"
+http = "1.4.0"
+log = "0.4.29"
+maud = "0.27.0"
+rusqlite = { version = "0.38.0", features = ["bundled"] }
+tokio = { version = "1.49.0", features = ["rt", "sync", "fs"] }
+
+[profile.release]
+strip = "symbols"
+lto = true
+codegen-units = 1
+panic = "abort"
