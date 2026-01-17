@@ -33,11 +33,13 @@ body {
     height: 100%;
     display: flex;
     flex-direction: column;
+    padding: 24px;
 }
 
 .box {
     background: white;
     display: flex;
+    border: 1px solid black;
     flex-direction: row;
     height: 100%;
 }
@@ -82,21 +84,21 @@ body {
 .entry {
     display: flex;
     flex-direction: column;
+    flex: 1;
 
     .entry-header {
-        padding: 24px;
-        border-bottom: 1px solid black;
+        padding: 24px 96px;
+        border-bottom: 1px solid #e4e4e4;
 
         .entry-title {
-            border-bottom: 1px solid #e4e4e4;
-
             h1 {
                 font-size: 48px;
             }
         }
 
         .entry-subtitle {
-            font-size: 30px;
+            font-size: 26px;
+            font-style: italic;
         }
     }
 
