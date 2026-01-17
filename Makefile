@@ -8,8 +8,9 @@ $(BIN): $(SRC)
 	cp target/release/$@ $@
 
 watch:
-	RUST_LOG=info cargo watch -x "run -- serve"
+	EPOCH_PORT=8000 EPOCH_DB_PATH=test.db RUST_LOG=info cargo watch -x "run -- serve"
 
 clean:
 	rm -rf $(BIN)
+	rm -f test.db
 	cargo clean

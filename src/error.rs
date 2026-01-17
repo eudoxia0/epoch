@@ -1,6 +1,7 @@
 use std::error::Error;
 use std::fmt::Display;
 use std::fmt::Formatter;
+use std::num::ParseIntError;
 
 use axum::response::IntoResponse;
 use axum::response::Response;
@@ -45,6 +46,14 @@ impl From<std::io::Error> for AppError {
 impl From<rusqlite::Error> for AppError {
     fn from(value: rusqlite::Error) -> Self {
         AppError::new(format!("rusqlite: {value}"))
+    }
+}
+
+impl From<ParseIntError> for AppError {
+    fn from(_: ParseIntError) -> Self {
+        AppError {
+            message: "failed to parse integer.".to_string(),
+        }
     }
 }
 

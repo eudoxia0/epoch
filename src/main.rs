@@ -4,6 +4,7 @@ use crate::cli::entrypoint;
 
 mod assets;
 mod cli;
+mod config;
 mod db;
 mod error;
 mod server;

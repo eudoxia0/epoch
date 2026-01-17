@@ -7,7 +7,8 @@ use tokio::net::TcpListener;
 use tokio::sync::Mutex;
 
 use crate::assets::route_assets;
-use crate::db::create_db;
+use crate::config::Config;
+use crate::db::open_db;
 use crate::error::Fallible;
 use crate::views::AllView;
 use crate::views::EditDayView;
@@ -30,18 +31,12 @@ pub struct ServerState {
     pub db: Arc<Mutex<Connection>>,
 }
 
-impl ServerState {
-    pub fn new() -> Fallible<Self> {
-        let db: Connection = create_db()?;
-        let state: ServerState = ServerState {
-            db: Arc::new(Mutex::new(db)),
-        };
-        Ok(state)
-    }
-}
-
 pub async fn start_server() -> Fallible<()> {
-    let state = ServerState::new()?;
+    let config = Config::from_env()?;
+    let db: Connection = open_db(&config.db_path)?;
+    let state: ServerState = ServerState {
+        db: Arc::new(Mutex::new(db)),
+    };
 
     // Build the router.
     let router: Router<ServerState> = Router::new();
@@ -58,7 +53,7 @@ pub async fn start_server() -> Fallible<()> {
         .fallback(not_found_handler)
         .with_state(state)
         .into_make_service();
-    let bind: String = format!("127.0.0.1:{}", 8000);
+    let bind: String = format!("127.0.0.1:{}", config.port);
     log::info!("Started server on {bind}.");
     let listener: TcpListener = TcpListener::bind(bind).await?;
     axum::serve(listener, service).await?;
