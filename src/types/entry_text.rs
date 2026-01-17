@@ -25,6 +25,11 @@ impl EntryText {
     pub fn as_str(&self) -> &str {
         self.0.as_str()
     }
+
+    /// Return the (approximate) number of words in this entry.
+    pub fn word_count(&self) -> i32 {
+        i32::try_from(self.0.split_whitespace().count()).unwrap_or(i32::MAX)
+    }
 }
 
 impl TryFrom<String> for EntryText {
