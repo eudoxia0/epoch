@@ -113,11 +113,11 @@ body {
         font-size: 18px;
     }
 
-    ol {
+    ol li {
         list-style-type: decimal;
     }
 
-    ul {
+    ul li {
         list-style-type: rect;
     }
 
