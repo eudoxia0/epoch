@@ -113,14 +113,6 @@ body {
         font-size: 18px;
     }
 
-    ol li {
-        list-style-type: decimal;
-    }
-
-    ul li {
-        list-style-type: rect;
-    }
-
     li {
         margin-left: 48px;
         margin-right: 48px;
