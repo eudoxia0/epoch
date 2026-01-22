@@ -140,6 +140,22 @@ body {
     a {
         color: #b1002e;
     }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+
+        th {
+            font-weight: bold;
+            text-align: center;
+        }
+
+        th,
+        td {
+            padding: 4px 8px;
+            border: 1px solid black;
+        }
+    }
 }
 
 .edit-entry-page {
