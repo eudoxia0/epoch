@@ -1,4 +1,5 @@
 use std::sync::Arc;
+use std::thread::AccessError;
 
 use axum::Router;
 use axum::routing::IntoMakeService;
@@ -8,6 +9,7 @@ use tokio::sync::Mutex;
 
 use crate::assets::route_assets;
 use crate::config::Config;
+use crate::controllers::AchievementsController;
 use crate::controllers::AllController;
 use crate::controllers::DayController;
 use crate::controllers::RootController;
@@ -44,6 +46,7 @@ pub async fn start_server() -> Fallible<()> {
     let router = RootController::route(router);
     let router = SearchController::route(router);
     let router = StatsController::route(router);
+    let router = AchievementsController::route(router);
 
     let router = route_assets(router);
     let service: IntoMakeService<Router> = router
