@@ -1,0 +1,22 @@
+{% extends "base.jinja2" %}
+
+{% block controls %}
+    <div class="page-controls">
+        <a class="button" href="{{ back_url }}">
+            <div class="icon">🔙</div>
+            Back
+        </a>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="edit-entry-page">
+        <form class="entry-form" method="POST">
+            <textarea name="content" autofocus>{{ text }}</textarea>
+            <button class="button">
+                <div class="icon">💾</div>
+                Save
+            </button>
+        </form>
+    </div>
+{% endblock %}

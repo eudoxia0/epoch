@@ -1,3 +1,4 @@
+use askama::Template;
 use axum::Form;
 use axum::Router;
 use axum::extract::Path;
@@ -7,8 +8,6 @@ use axum::response::Redirect;
 use axum::routing::get;
 use axum::routing::post;
 use http::StatusCode;
-use maud::Markup;
-use maud::html;
 use rusqlite::Connection;
 use rusqlite::Transaction;
 use rusqlite::params;
@@ -19,7 +18,6 @@ use crate::db::DayEntry;
 use crate::db::get_day_entry;
 use crate::error::Fallible;
 use crate::server::ServerState;
-use crate::templates::page_template;
 use crate::types::Date;
 use crate::types::EntryText;
 use crate::views::GetDayView;
@@ -48,27 +46,12 @@ impl EditDayView {
             Some(de) => de.content.as_str().to_string(),
             None => String::new(),
         };
-        let body: Markup = html! {
-            .edit-entry-page {
-                form .entry-form method="POST" {
-                    textarea name="content" autofocus {
-                        (text)
-                    }
-                    button .button {
-                        .icon { "💾" }
-                        "Save"
-                    }
-                }
-            }
+        let tmpl = DayEditTemplate {
+            title: &date.humanize(),
+            text: &text,
+            back_url: &GetDayView::url(date),
         };
-        let controls = html! {
-            a .button href=(GetDayView::url(date)) {
-                .icon { "🔙" }
-                "Back"
-            }
-        };
-        let html = page_template(&date.humanize(), Some(controls), body);
-        Ok((StatusCode::OK, Html(html.into_string())))
+        Ok((StatusCode::OK, Html(tmpl.render()?)))
     }
 
     async fn post_handler(
@@ -91,6 +74,14 @@ impl EditDayView {
 #[derive(Deserialize)]
 struct FormData {
     content: String,
+}
+
+#[derive(Template)]
+#[template(path = "day_edit.jinja2")]
+struct DayEditTemplate<'a> {
+    title: &'a str,
+    text: &'a str,
+    back_url: &'a str,
 }
 
 /// Create a day entry.

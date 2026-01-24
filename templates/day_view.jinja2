@@ -1,0 +1,25 @@
+{% extends "base.jinja2" %}
+
+{% block controls %}
+    <div class="page-controls">
+        <a class="button" href="{{ edit_url }}">
+            <div class="icon">✏️</div>
+            Edit
+        </a>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="view-entry-page">
+        <p>
+            <i>{{ weekday }}</i>
+        </p>
+        {% if has_entry %}
+            {{ content|safe }}
+        {% else %}
+            <p>
+                <i>No entry for this date.</i>
+            </p>
+        {% endif %}
+    </div>
+{% endblock %}

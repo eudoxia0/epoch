@@ -1,12 +1,10 @@
+use askama::Template;
 use axum::Router;
 use axum::extract::Path;
 use axum::extract::State;
 use axum::response::Html;
 use axum::routing::get;
 use http::StatusCode;
-use maud::Markup;
-use maud::PreEscaped;
-use maud::html;
 use rusqlite::Connection;
 use rusqlite::Transaction;
 use tokio::sync::MutexGuard;
@@ -15,7 +13,6 @@ use crate::db::DayEntry;
 use crate::db::get_day_entry;
 use crate::error::Fallible;
 use crate::server::ServerState;
-use crate::templates::page_template;
 use crate::types::Date;
 use crate::views::EditDayView;
 
@@ -37,40 +34,28 @@ impl GetDayView {
         let mut db: MutexGuard<'_, Connection> = state.db.lock().await;
         let tx: Transaction<'_> = db.transaction()?;
         let maybe_day_entry: Option<DayEntry> = get_day_entry(&tx, date)?;
-        let body: Markup = match maybe_day_entry {
-            Some(day_entry) => {
-                html! {
-                    (PreEscaped(day_entry.content.as_html()?))
-                }
-            }
-            None => {
-                html! {
-                    p {
-                        i {
-                            "No entry for this date."
-                        }
-                    }
-                }
-            }
+        let (has_entry, content) = match maybe_day_entry {
+            Some(day_entry) => (true, day_entry.content.as_html()?),
+            None => (false, String::new()),
         };
         let weekday = date.weekday();
-        let body: Markup = html! {
-            .view-entry-page {
-                p {
-                    i {
-                        (weekday)
-                    }
-                }
-                (body)
-            }
+        let tmpl = DayViewTemplate {
+            title: &date.humanize(),
+            weekday: &weekday.to_string(),
+            has_entry,
+            content: &content,
+            edit_url: &EditDayView::url(date),
         };
-        let controls = html! {
-            a .button href=(EditDayView::url(date)) {
-                .icon { "✏️" }
-                "Edit"
-            }
-        };
-        let html = page_template(&date.humanize(), Some(controls), body);
-        Ok((StatusCode::OK, Html(html.into_string())))
+        Ok((StatusCode::OK, Html(tmpl.render()?)))
     }
+}
+
+#[derive(Template)]
+#[template(path = "day_view.jinja2")]
+struct DayViewTemplate<'a> {
+    title: &'a str,
+    weekday: &'a str,
+    has_entry: bool,
+    content: &'a str,
+    edit_url: &'a str,
 }
