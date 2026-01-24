@@ -13,7 +13,7 @@ install: $(BIN)
 	systemctl --user start $(BIN)
 
 watch:
-	EPOCH_PORT=8000 EPOCH_DB_PATH=test.db RUST_LOG=info cargo watch -x "run -- serve"
+	EPOCH_PORT=9000 EPOCH_DB_PATH=test.db RUST_LOG=info cargo watch -x "run -- serve"
 
 clean:
 	rm -rf $(BIN)
