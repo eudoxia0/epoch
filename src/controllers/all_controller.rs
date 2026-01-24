@@ -18,18 +18,14 @@ use crate::error::Fallible;
 use crate::server::ServerState;
 use crate::types::Date;
 
-pub struct AllView {}
+pub struct AllController {}
 
-impl AllView {
+impl AllController {
     pub fn route(router: Router<ServerState>) -> Router<ServerState> {
-        router.route(Self::url(), get(Self::handler))
+        router.route("/all", get(Self::index))
     }
 
-    pub fn url() -> &'static str {
-        "/all"
-    }
-
-    async fn handler(State(state): State<ServerState>) -> Fallible<(StatusCode, Html<String>)> {
+    async fn index(State(state): State<ServerState>) -> Fallible<(StatusCode, Html<String>)> {
         let mut db: MutexGuard<'_, Connection> = state.db.lock().await;
         let tx: Transaction<'_> = db.transaction()?;
 

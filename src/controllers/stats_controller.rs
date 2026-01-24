@@ -11,18 +11,14 @@ use tokio::sync::MutexGuard;
 use crate::error::Fallible;
 use crate::server::ServerState;
 
-pub struct StatsView {}
+pub struct StatsController {}
 
-impl StatsView {
+impl StatsController {
     pub fn route(router: Router<ServerState>) -> Router<ServerState> {
-        router.route(Self::url(), get(Self::handler))
+        router.route("/stats", get(Self::index))
     }
 
-    pub fn url() -> &'static str {
-        "/stats"
-    }
-
-    async fn handler(State(state): State<ServerState>) -> Fallible<(StatusCode, Html<String>)> {
+    async fn index(State(state): State<ServerState>) -> Fallible<(StatusCode, Html<String>)> {
         let mut db: MutexGuard<'_, Connection> = state.db.lock().await;
         let tx: Transaction<'_> = db.transaction()?;
         let title: &str = "Stats";

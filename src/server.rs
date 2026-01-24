@@ -8,14 +8,13 @@ use tokio::sync::Mutex;
 
 use crate::assets::route_assets;
 use crate::config::Config;
+use crate::controllers::AllController;
 use crate::controllers::DayController;
+use crate::controllers::RootController;
+use crate::controllers::SearchController;
+use crate::controllers::StatsController;
 use crate::db::open_db;
 use crate::error::Fallible;
-use crate::views::AllView;
-use crate::views::IndexView;
-use crate::views::SearchView;
-use crate::views::StatsView;
-use crate::views::not_found_handler;
 
 pub const CACHE_CONTROL_NONE: &str = "no-cache";
 
@@ -40,15 +39,15 @@ pub async fn start_server() -> Fallible<()> {
     // Build the router.
     let router: Router<ServerState> = Router::new();
 
-    let router = AllView::route(router);
+    let router = AllController::route(router);
     let router = DayController::route(router);
-    let router = IndexView::route(router);
-    let router = SearchView::route(router);
-    let router = StatsView::route(router);
+    let router = RootController::route(router);
+    let router = SearchController::route(router);
+    let router = StatsController::route(router);
 
     let router = route_assets(router);
     let service: IntoMakeService<Router> = router
-        .fallback(not_found_handler)
+        .fallback(RootController::not_found)
         .with_state(state)
         .into_make_service();
     let bind: String = format!("127.0.0.1:{}", config.port);

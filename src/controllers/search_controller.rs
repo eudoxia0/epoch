@@ -16,18 +16,14 @@ use crate::error::Fallible;
 use crate::server::ServerState;
 use crate::types::Date;
 
-pub struct SearchView {}
+pub struct SearchController {}
 
-impl SearchView {
+impl SearchController {
     pub fn route(router: Router<ServerState>) -> Router<ServerState> {
-        router.route(Self::url(), get(Self::handler))
+        router.route("/search", get(Self::index))
     }
 
-    pub fn url() -> &'static str {
-        "/search"
-    }
-
-    async fn handler(
+    async fn index(
         State(state): State<ServerState>,
         Query(params): Query<SearchParams>,
     ) -> Fallible<(StatusCode, Html<String>)> {
