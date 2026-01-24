@@ -1,0 +1,22 @@
+{% extends "base.jinja2" %}
+
+{% block content %}
+    <div class="search-page">
+        <form class="search-form" method="GET">
+            <input type="text" name="q" value="{{ query }}" autofocus />
+            <button class="button" type="Submit">
+                <div class="icon">🔍</div>
+                Search
+            </button>
+        </form>
+        {% if !results.is_empty() %}
+            <div class="results">
+                {% for result in results %}
+                    <div class="result">
+                        <a href="{{ result.url }}">{{ result.display }}</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
