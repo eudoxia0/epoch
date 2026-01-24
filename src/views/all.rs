@@ -115,7 +115,7 @@ fn build_month_data(year: i32, month: u32, entry_dates: &HashSet<String>) -> Mon
                 name: "Invalid",
                 first_weekday: 0,
                 days: Vec::new(),
-            }
+            };
         }
     };
 
