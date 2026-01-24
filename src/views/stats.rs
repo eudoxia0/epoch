@@ -69,8 +69,8 @@ fn count_words(tx: &Transaction<'_>) -> Fallible<i32> {
 
 #[derive(Template)]
 #[template(path = "stats_index.jinja2")]
-pub struct StatsIndexTemplate {
-    pub title: String,
+pub struct StatsIndexTemplate<'a> {
+    pub title: &'a str,
     pub entries: i32,
     pub words: i32,
 }
