@@ -8,7 +8,6 @@ mod config;
 mod db;
 mod error;
 mod server;
-mod templates;
 mod types;
 mod views;
 
