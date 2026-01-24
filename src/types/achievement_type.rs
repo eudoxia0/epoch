@@ -38,6 +38,15 @@ impl AchievementType {
             Self::AteTheFrog => "🐸",
         }
     }
+
+    pub fn title(self) -> &'static str {
+        match self {
+            Self::FinishedBook => "Finished a book",
+            Self::CompletedProject => "Completed a project",
+            Self::Gym => "Went to the gym",
+            Self::AteTheFrog => "Ate the frog",
+        }
+    }
 }
 
 impl TryFrom<&str> for AchievementType {
