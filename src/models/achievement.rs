@@ -6,10 +6,16 @@ use crate::types::AchievementType;
 use crate::types::Date;
 use crate::types::RichText;
 
+/// Represents an achievement: something the user did that's worth recording as
+/// a victory.
 pub struct Achievement {
+    /// The achievement ID.
     pub achievement_id: AchievementId,
+    /// The date when the achievement was logged.
     pub date: Date,
+    /// The achievement type.
     pub achievement_type: AchievementType,
+    /// The text explaining what was achieved.
     pub content: RichText,
 }
 
