@@ -3,16 +3,16 @@ use rusqlite::params;
 
 use crate::error::Fallible;
 use crate::types::Date;
-use crate::types::EntryText;
+use crate::types::RichText;
 
 pub struct DayEntry {
     pub date: Date,
-    pub content: EntryText,
+    pub content: RichText,
 }
 
 impl DayEntry {
     /// Create a day entry.
-    pub fn create(tx: &Transaction<'_>, date: Date, content: &EntryText) -> Fallible<()> {
+    pub fn create(tx: &Transaction<'_>, date: Date, content: &RichText) -> Fallible<()> {
         let word_count: i32 = content.word_count();
         let sql = "
             insert into day_entries
@@ -37,7 +37,7 @@ impl DayEntry {
         let mut stmt = tx.prepare(sql)?;
         let mut rows = stmt.query_map(params![date], |row| row.get(0))?;
         if let Some(row) = rows.next() {
-            let content: EntryText = row?;
+            let content: RichText = row?;
             Ok(Some(DayEntry { date, content }))
         } else {
             Ok(None)
@@ -115,7 +115,7 @@ impl DayEntry {
     }
 
     /// Update a day entry.
-    pub fn update(tx: &Transaction<'_>, date: Date, content: &EntryText) -> Fallible<()> {
+    pub fn update(tx: &Transaction<'_>, date: Date, content: &RichText) -> Fallible<()> {
         let word_count: i32 = content.word_count();
         let sql = "
             update day_entries set

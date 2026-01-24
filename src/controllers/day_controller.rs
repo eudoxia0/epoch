@@ -17,7 +17,7 @@ use crate::error::Fallible;
 use crate::models::DayEntry;
 use crate::server::ServerState;
 use crate::types::Date;
-use crate::types::EntryText;
+use crate::types::RichText;
 
 pub struct DayController {}
 
@@ -95,7 +95,7 @@ impl DayController {
         Path(date): Path<Date>,
         Form(form): Form<UpdateForm>,
     ) -> Fallible<Redirect> {
-        let content: EntryText = EntryText::new(form.content)?;
+        let content: RichText = RichText::new(form.content)?;
         let mut db: MutexGuard<'_, Connection> = state.db.lock().await;
         let tx: Transaction<'_> = db.transaction()?;
         match DayEntry::get_opt(&tx, date)? {

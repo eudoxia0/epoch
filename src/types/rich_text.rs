@@ -10,10 +10,10 @@ use rusqlite::types::ValueRef;
 use crate::error::AppError;
 use crate::error::Fallible;
 
-/// Represents the text of an entry.
-pub struct EntryText(String);
+/// Represents Markdown text.
+pub struct RichText(String);
 
-impl EntryText {
+impl RichText {
     /// Construct an entry text. Trims the string, and checks it is non-empty.
     pub fn new(text: impl ToString) -> Fallible<Self> {
         let text = text.to_string().trim().to_string();
@@ -45,24 +45,24 @@ impl EntryText {
     }
 }
 
-impl TryFrom<String> for EntryText {
+impl TryFrom<String> for RichText {
     type Error = AppError;
 
     fn try_from(value: String) -> Result<Self, Self::Error> {
-        EntryText::new(value)
+        RichText::new(value)
     }
 }
 
-impl ToSql for EntryText {
+impl ToSql for RichText {
     fn to_sql(&self) -> rusqlite::Result<ToSqlOutput<'_>> {
         let str = self.as_str();
         Ok(ToSqlOutput::from(str))
     }
 }
 
-impl FromSql for EntryText {
+impl FromSql for RichText {
     fn column_result(value: ValueRef<'_>) -> FromSqlResult<Self> {
         let string: String = FromSql::column_result(value)?;
-        EntryText::new(string).map_err(|e| FromSqlError::Other(Box::new(e)))
+        RichText::new(string).map_err(|e| FromSqlError::Other(Box::new(e)))
     }
 }
