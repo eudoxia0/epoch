@@ -29,6 +29,15 @@ impl AchievementType {
             Self::AteTheFrog => "frog",
         }
     }
+
+    pub fn icon(self) -> &'static str {
+        match self {
+            Self::FinishedBook => "📚️",
+            Self::CompletedProject => "🎨",
+            Self::Gym => "💪",
+            Self::AteTheFrog => "🐸",
+        }
+    }
 }
 
 impl TryFrom<&str> for AchievementType {
