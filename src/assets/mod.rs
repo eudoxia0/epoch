@@ -11,14 +11,10 @@ use crate::server::CONTENT_TYPE_CSS;
 use crate::server::CONTENT_TYPE_PNG;
 use crate::server::ServerState;
 
-pub const CSS_URL: &str = "/static/style.css";
-
-pub const CSS_RESET_URL: &str = "/static/reset.css";
-
 pub fn route_assets(router: Router<ServerState>) -> Router<ServerState> {
     router
-        .route(CSS_URL, get(css_handler))
-        .route(CSS_RESET_URL, get(css_reset_handler))
+        .route("/static/style.css", get(css_handler))
+        .route("/static/reset.css", get(css_reset_handler))
         .route("/favicon.ico", get(favicon_handler))
 }
 
