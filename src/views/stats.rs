@@ -1,3 +1,4 @@
+use askama::Template;
 use axum::Router;
 use axum::extract::State;
 use axum::response::Html;
@@ -64,4 +65,12 @@ fn count_words(tx: &Transaction<'_>) -> Fallible<i32> {
     ";
     let result: i32 = tx.query_one(sql, [], |row| row.get(0))?;
     Ok(result)
+}
+
+#[derive(Template)]
+#[template(path = "stats_index.jinja2")]
+pub struct StatsIndexTemplate {
+    pub title: String,
+    pub entries: i32,
+    pub words: i32,
 }
