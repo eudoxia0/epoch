@@ -9,4 +9,4 @@ create table achievements (
     date text not null,
     achievement_type text not null,
     content text not null
-);
+) strict;
