@@ -10,13 +10,11 @@ use axum::routing::post;
 use http::StatusCode;
 use rusqlite::Connection;
 use rusqlite::Transaction;
-use rusqlite::params;
 use serde::Deserialize;
 use tokio::sync::MutexGuard;
 
-use crate::db::DayEntry;
-use crate::db::get_day_entry;
 use crate::error::Fallible;
+use crate::models::DayEntry;
 use crate::server::ServerState;
 use crate::types::Date;
 use crate::types::EntryText;
@@ -57,7 +55,7 @@ impl DayController {
     ) -> Fallible<(StatusCode, Html<String>)> {
         let mut db: MutexGuard<'_, Connection> = state.db.lock().await;
         let tx: Transaction<'_> = db.transaction()?;
-        let maybe_day_entry: Option<DayEntry> = get_day_entry(&tx, date)?;
+        let maybe_day_entry: Option<DayEntry> = DayEntry::get_opt(&tx, date)?;
         let (has_entry, content) = match maybe_day_entry {
             Some(day_entry) => (true, day_entry.content.as_html()?),
             None => (false, String::new()),
@@ -79,7 +77,7 @@ impl DayController {
     ) -> Fallible<(StatusCode, Html<String>)> {
         let mut db: MutexGuard<'_, Connection> = state.db.lock().await;
         let tx: Transaction<'_> = db.transaction()?;
-        let maybe_day_entry: Option<DayEntry> = get_day_entry(&tx, date)?;
+        let maybe_day_entry: Option<DayEntry> = DayEntry::get_opt(&tx, date)?;
         let text: String = match maybe_day_entry {
             Some(de) => de.content.as_str().to_string(),
             None => String::new(),
@@ -100,9 +98,9 @@ impl DayController {
         let content: EntryText = EntryText::new(form.content)?;
         let mut db: MutexGuard<'_, Connection> = state.db.lock().await;
         let tx: Transaction<'_> = db.transaction()?;
-        match get_day_entry(&tx, date)? {
-            Some(_) => update_day_entry(&tx, date, &content)?,
-            None => create_day_entry(&tx, date, &content)?,
+        match DayEntry::get_opt(&tx, date)? {
+            Some(_) => DayEntry::update(&tx, date, &content)?,
+            None => DayEntry::create(&tx, date, &content)?,
         };
         tx.commit()?;
         Ok(Redirect::to(&DayController::url_show(date)))
@@ -130,31 +128,4 @@ struct DayEditTemplate<'a> {
     title: &'a str,
     text: &'a str,
     back_url: &'a str,
-}
-
-/// Create a day entry.
-fn create_day_entry(tx: &Transaction<'_>, date: Date, content: &EntryText) -> Fallible<()> {
-    let word_count: i32 = content.word_count();
-    let sql = "
-        insert into day_entries
-            (date, content, word_count)
-        values
-            (?1, ?2, ?3);
-    ";
-    tx.execute(sql, params![date, content, word_count])?;
-    Ok(())
-}
-
-/// Update a day entry.
-fn update_day_entry(tx: &Transaction<'_>, date: Date, content: &EntryText) -> Fallible<()> {
-    let word_count: i32 = content.word_count();
-    let sql = "
-        update day_entries set
-            content    = ?2,
-            word_count = ?3
-        where
-            date = ?1;
-    ";
-    tx.execute(sql, params![date, content, word_count])?;
-    Ok(())
 }

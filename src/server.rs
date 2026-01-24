@@ -13,8 +13,8 @@ use crate::controllers::DayController;
 use crate::controllers::RootController;
 use crate::controllers::SearchController;
 use crate::controllers::StatsController;
-use crate::db::open_db;
 use crate::error::Fallible;
+use crate::models::open_db;
 
 pub const CACHE_CONTROL_NONE: &str = "no-cache";
 

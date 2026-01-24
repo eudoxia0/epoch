@@ -7,14 +7,13 @@ use axum::routing::get;
 use http::StatusCode;
 use rusqlite::Connection;
 use rusqlite::Transaction;
-use rusqlite::params;
 use serde::Deserialize;
 use tokio::sync::MutexGuard;
 
 use crate::controllers::DayController;
 use crate::error::Fallible;
+use crate::models::DayEntry;
 use crate::server::ServerState;
-use crate::types::Date;
 
 pub struct SearchController {}
 
@@ -32,7 +31,7 @@ impl SearchController {
             Some(query) => {
                 let mut db: MutexGuard<'_, Connection> = state.db.lock().await;
                 let tx: Transaction<'_> = db.transaction()?;
-                let dates = search_day_entries(&tx, query)?;
+                let dates = DayEntry::search(&tx, query)?;
                 dates
                     .into_iter()
                     .map(|date| SearchResult {
@@ -68,24 +67,4 @@ struct SearchIndexTemplate<'a> {
     title: &'a str,
     query: &'a str,
     results: Vec<SearchResult>,
-}
-
-pub fn search_day_entries(tx: &Transaction<'_>, query: &str) -> Fallible<Vec<Date>> {
-    let sql = "
-        select
-            date
-        from
-            day_entries
-        where
-            lower(content) like lower(?1)
-        order by
-            date asc;
-    ";
-    let mut stmt = tx.prepare(sql)?;
-    let rows = stmt.query_map(params![format!("%{}%", query)], |row| row.get(0))?;
-    let mut entries = Vec::new();
-    for entry in rows {
-        entries.push(entry?);
-    }
-    Ok(entries)
 }

@@ -9,6 +9,7 @@ use rusqlite::Transaction;
 use tokio::sync::MutexGuard;
 
 use crate::error::Fallible;
+use crate::models::DayEntry;
 use crate::server::ServerState;
 
 pub struct StatsController {}
@@ -22,8 +23,8 @@ impl StatsController {
         let mut db: MutexGuard<'_, Connection> = state.db.lock().await;
         let tx: Transaction<'_> = db.transaction()?;
         let title: &str = "Stats";
-        let entries: i32 = count_entries(&tx)?;
-        let words: i32 = count_words(&tx)?;
+        let entries: i32 = DayEntry::count(&tx)?;
+        let words: i32 = DayEntry::count_words(&tx)?;
         let tmpl: StatsIndexTemplate = StatsIndexTemplate {
             title,
             entries,
@@ -31,30 +32,6 @@ impl StatsController {
         };
         Ok((StatusCode::OK, Html(tmpl.render()?)))
     }
-}
-
-/// Return the total number of entries.
-fn count_entries(tx: &Transaction<'_>) -> Fallible<i32> {
-    let sql = "
-        select
-            count(*)
-        from
-            day_entries;
-    ";
-    let result: i32 = tx.query_one(sql, [], |row| row.get(0))?;
-    Ok(result)
-}
-
-/// Return the total number of words across all entries.
-fn count_words(tx: &Transaction<'_>) -> Fallible<i32> {
-    let sql = "
-        select
-            coalesce(sum(word_count), 0)
-        from
-            day_entries;
-    ";
-    let result: i32 = tx.query_one(sql, [], |row| row.get(0))?;
-    Ok(result)
 }
 
 #[derive(Template)]
