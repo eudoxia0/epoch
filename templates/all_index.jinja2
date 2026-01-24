@@ -1,0 +1,39 @@
+{% extends "base.jinja2" %}
+
+{% block content %}
+    <div class="all-entries-page">
+        <div class="all-entries-body">
+            {% for year in years %}
+                <div class="calendar-year">
+                    <h2 class="year-title">{{ year.year }}</h2>
+                    <div class="months-grid">
+                        {% for month in year.months %}
+                            <div class="calendar-month">
+                                <h3 class="month-title">{{ month.name }}</h3>
+                                <div class="calendar-grid">
+                                    <div class="calendar-header">Su</div>
+                                    <div class="calendar-header">Mo</div>
+                                    <div class="calendar-header">Tu</div>
+                                    <div class="calendar-header">We</div>
+                                    <div class="calendar-header">Th</div>
+                                    <div class="calendar-header">Fr</div>
+                                    <div class="calendar-header">Sa</div>
+
+                                    {% for _ in 0..month.first_weekday %}
+                                        <div class="calendar-day empty"></div>
+                                    {% endfor %}
+
+                                    {% for day in month.days %}
+                                        <div class="calendar-day">
+                                            <a href="{{ day.url }}"{% if !day.has_entry %} class="no-entry"{% endif %}>{{ day.day }}</a>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

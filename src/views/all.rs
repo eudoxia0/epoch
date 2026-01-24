@@ -1,5 +1,6 @@
 use std::collections::HashSet;
 
+use askama::Template;
 use axum::Router;
 use axum::extract::State;
 use axum::response::Html;
@@ -7,8 +8,6 @@ use axum::routing::get;
 use chrono::Datelike;
 use chrono::NaiveDate;
 use http::StatusCode;
-use maud::Markup;
-use maud::html;
 use rusqlite::Connection;
 use rusqlite::Transaction;
 use rusqlite::params;
@@ -17,7 +16,6 @@ use tokio::sync::MutexGuard;
 use crate::db::DayEntry;
 use crate::error::Fallible;
 use crate::server::ServerState;
-use crate::templates::page_template;
 use crate::types::Date;
 
 pub struct AllView {}
@@ -46,23 +44,45 @@ impl AllView {
             .map(|e| e.date.year())
             .unwrap_or(current_year);
 
-        // Build the calendar HTML
-        let body: Markup = html! {
-            .all-entries-page {
-                .all-entries-body {
-                    @for year in (earliest_year..=current_year).rev() {
-                        (render_year(year, &entry_dates))
-                    }
-                }
-            }
-        };
+        // Build the calendar data
+        let years: Vec<YearData> = (earliest_year..=current_year)
+            .rev()
+            .map(|year| build_year_data(year, &entry_dates))
+            .collect();
 
-        let html = page_template("All Entries", None, body);
-        Ok((StatusCode::OK, Html(html.into_string())))
+        let tmpl = AllIndexTemplate {
+            title: "All Entries",
+            years,
+        };
+        Ok((StatusCode::OK, Html(tmpl.render()?)))
     }
 }
 
-fn render_year(year: i32, entry_dates: &HashSet<String>) -> Markup {
+#[derive(Template)]
+#[template(path = "all_index.jinja2")]
+struct AllIndexTemplate<'a> {
+    title: &'a str,
+    years: Vec<YearData>,
+}
+
+struct YearData {
+    year: i32,
+    months: Vec<MonthData>,
+}
+
+struct MonthData {
+    name: &'static str,
+    first_weekday: u32,
+    days: Vec<DayData>,
+}
+
+struct DayData {
+    day: u32,
+    url: String,
+    has_entry: bool,
+}
+
+fn build_year_data(year: i32, entry_dates: &HashSet<String>) -> YearData {
     let today = Date::today();
     let current_year = today.year();
     let current_month = today.month();
@@ -74,19 +94,14 @@ fn render_year(year: i32, entry_dates: &HashSet<String>) -> Markup {
         12
     };
 
-    html! {
-        .calendar-year {
-            h2.year-title { (year) }
-            .months-grid {
-                @for month in 1..=max_month {
-                    (render_month(year, month, entry_dates))
-                }
-            }
-        }
-    }
+    let months: Vec<MonthData> = (1..=max_month)
+        .map(|month| build_month_data(year, month, entry_dates))
+        .collect();
+
+    YearData { year, months }
 }
 
-fn render_month(year: i32, month: u32, entry_dates: &HashSet<String>) -> Markup {
+fn build_month_data(year: i32, month: u32, entry_dates: &HashSet<String>) -> MonthData {
     let month_name = chrono::Month::try_from(month as u8)
         .map(|m| m.name())
         .unwrap_or("Unknown");
@@ -95,7 +110,13 @@ fn render_month(year: i32, month: u32, entry_dates: &HashSet<String>) -> Markup 
     let first_day = NaiveDate::from_ymd_opt(year, month, 1);
     let first_day = match first_day {
         Some(d) => d,
-        None => return html! { .calendar-month { p { "Invalid month" } } },
+        None => {
+            return MonthData {
+                name: "Invalid",
+                first_weekday: 0,
+                days: Vec::new(),
+            }
+        }
     };
 
     // Get the number of days to show in the month
@@ -111,37 +132,23 @@ fn render_month(year: i32, month: u32, entry_dates: &HashSet<String>) -> Markup 
     // We want Sunday = 0, so adjust
     let first_weekday = first_day.weekday().num_days_from_sunday();
 
-    html! {
-        .calendar-month {
-            h3.month-title { (month_name) }
-            .calendar-grid {
-                // Weekday headers
-                .calendar-header { "Su" }
-                .calendar-header { "Mo" }
-                .calendar-header { "Tu" }
-                .calendar-header { "We" }
-                .calendar-header { "Th" }
-                .calendar-header { "Fr" }
-                .calendar-header { "Sa" }
-
-                // Empty cells before the first day
-                @for _ in 0..first_weekday {
-                    .calendar-day.empty {}
-                }
-
-                // Days of the month
-                @for day in 1..=max_day {
-                    @let date_str = format!("{:04}-{:02}-{:02}", year, month, day);
-                    @let has_entry = entry_dates.contains(&date_str);
-                    @let url = format!("/day/{}", date_str);
-                    .calendar-day {
-                        a href=(url) class=@if !has_entry { "no-entry" } {
-                            (day)
-                        }
-                    }
-                }
+    let days: Vec<DayData> = (1..=max_day)
+        .map(|day| {
+            let date_str = format!("{:04}-{:02}-{:02}", year, month, day);
+            let has_entry = entry_dates.contains(&date_str);
+            let url = format!("/day/{}", date_str);
+            DayData {
+                day,
+                url,
+                has_entry,
             }
-        }
+        })
+        .collect();
+
+    MonthData {
+        name: month_name,
+        first_weekday,
+        days,
     }
 }
 
