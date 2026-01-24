@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="/static/reset.css" />
+        <link rel="stylesheet" href="/static/style.css" />
+        <title>{{ title }} | Epoch</title>
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+        <div class="app">
+            <div class="box">
+                <div class="sidebar">
+                    <nav>
+                        <ul>
+                            <li>
+                                <a href="/day/2026-01-24">
+                                    <div class="icon">📆</div>
+                                    <div class="text">Today</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/day/2026-01-23">
+                                    <div class="icon">🗓️</div>
+                                    <div class="text">Yesterday</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/all">
+                                    <div class="icon">🗓️</div>
+                                    <div class="text">All Entries</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/search">
+                                    <div class="icon">🔍</div>
+                                    <div class="text">Search</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/stats">
+                                    <div class="icon">📊</div>
+                                    <div class="text">Stats</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="content">
+                    <div class="header">
+                        <h1>{{ title }}</h1>
+                    </div>
+                    <div class="page-controls">
+                        {% block controls %}{% endblock %}
+                    </div>
+                    <div class="page-content">
+                        {% block content %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
