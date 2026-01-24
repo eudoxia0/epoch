@@ -2,9 +2,9 @@ use axum::Router;
 use axum::response::Redirect;
 use axum::routing::get;
 
+use crate::controllers::DayController;
 use crate::server::ServerState;
 use crate::types::Date;
-use crate::views::GetDayView;
 
 pub struct IndexView {}
 
@@ -19,6 +19,6 @@ impl IndexView {
 
     async fn handler() -> Redirect {
         let today: Date = Date::today();
-        Redirect::to(&GetDayView::url(today))
+        Redirect::to(&DayController::url_show(today))
     }
 }

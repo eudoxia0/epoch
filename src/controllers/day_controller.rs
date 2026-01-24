@@ -20,22 +20,60 @@ use crate::error::Fallible;
 use crate::server::ServerState;
 use crate::types::Date;
 use crate::types::EntryText;
-use crate::views::GetDayView;
 
-pub struct EditDayView {}
+pub struct DayController {}
 
-impl EditDayView {
+impl DayController {
     pub fn route(router: Router<ServerState>) -> Router<ServerState> {
         router
-            .route("/day/{date}/edit", get(Self::get_handler))
-            .route("/day/{date}/edit", post(Self::post_handler))
+            .route("/day/today", get(Self::today))
+            .route("/day/yesterday", get(Self::yesterday))
+            .route("/day/{date}", get(Self::show))
+            .route("/day/{date}/edit", get(Self::edit))
+            .route("/day/{date}/edit", post(Self::update))
     }
 
-    pub fn url(date: Date) -> String {
+    pub fn url_show(date: Date) -> String {
+        format!("/day/{date}")
+    }
+
+    pub fn url_edit(date: Date) -> String {
         format!("/day/{date}/edit")
     }
 
-    async fn get_handler(
+    async fn today() -> Redirect {
+        let today: Date = Date::today();
+        Redirect::to(&DayController::url_show(today))
+    }
+
+    async fn yesterday() -> Redirect {
+        let today: Date = Date::today();
+        Redirect::to(&DayController::url_show(today.previous()))
+    }
+
+    async fn show(
+        State(state): State<ServerState>,
+        Path(date): Path<Date>,
+    ) -> Fallible<(StatusCode, Html<String>)> {
+        let mut db: MutexGuard<'_, Connection> = state.db.lock().await;
+        let tx: Transaction<'_> = db.transaction()?;
+        let maybe_day_entry: Option<DayEntry> = get_day_entry(&tx, date)?;
+        let (has_entry, content) = match maybe_day_entry {
+            Some(day_entry) => (true, day_entry.content.as_html()?),
+            None => (false, String::new()),
+        };
+        let weekday = date.weekday();
+        let tmpl = DayViewTemplate {
+            title: &date.humanize(),
+            weekday: &weekday.to_string(),
+            has_entry,
+            content: &content,
+            edit_url: &DayController::url_edit(date),
+        };
+        Ok((StatusCode::OK, Html(tmpl.render()?)))
+    }
+
+    async fn edit(
         State(state): State<ServerState>,
         Path(date): Path<Date>,
     ) -> Fallible<(StatusCode, Html<String>)> {
@@ -49,15 +87,15 @@ impl EditDayView {
         let tmpl = DayEditTemplate {
             title: &date.humanize(),
             text: &text,
-            back_url: &GetDayView::url(date),
+            back_url: &DayController::url_show(date),
         };
         Ok((StatusCode::OK, Html(tmpl.render()?)))
     }
 
-    async fn post_handler(
+    async fn update(
         State(state): State<ServerState>,
         Path(date): Path<Date>,
-        Form(form): Form<FormData>,
+        Form(form): Form<UpdateForm>,
     ) -> Fallible<Redirect> {
         let content: EntryText = EntryText::new(form.content)?;
         let mut db: MutexGuard<'_, Connection> = state.db.lock().await;
@@ -67,13 +105,23 @@ impl EditDayView {
             None => create_day_entry(&tx, date, &content)?,
         };
         tx.commit()?;
-        Ok(Redirect::to(&GetDayView::url(date)))
+        Ok(Redirect::to(&DayController::url_show(date)))
     }
 }
 
 #[derive(Deserialize)]
-struct FormData {
+struct UpdateForm {
     content: String,
+}
+
+#[derive(Template)]
+#[template(path = "day_view.jinja2")]
+struct DayViewTemplate<'a> {
+    title: &'a str,
+    weekday: &'a str,
+    has_entry: bool,
+    content: &'a str,
+    edit_url: &'a str,
 }
 
 #[derive(Template)]

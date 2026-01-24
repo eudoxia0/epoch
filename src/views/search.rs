@@ -11,10 +11,10 @@ use rusqlite::params;
 use serde::Deserialize;
 use tokio::sync::MutexGuard;
 
+use crate::controllers::DayController;
 use crate::error::Fallible;
 use crate::server::ServerState;
 use crate::types::Date;
-use crate::views::GetDayView;
 
 pub struct SearchView {}
 
@@ -40,7 +40,7 @@ impl SearchView {
                 dates
                     .into_iter()
                     .map(|date| SearchResult {
-                        url: GetDayView::url(date),
+                        url: DayController::url_show(date),
                         display: date.humanize(),
                     })
                     .collect()

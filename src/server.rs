@@ -8,11 +8,10 @@ use tokio::sync::Mutex;
 
 use crate::assets::route_assets;
 use crate::config::Config;
+use crate::controllers::DayController;
 use crate::db::open_db;
 use crate::error::Fallible;
 use crate::views::AllView;
-use crate::views::EditDayView;
-use crate::views::GetDayView;
 use crate::views::IndexView;
 use crate::views::SearchView;
 use crate::views::StatsView;
@@ -42,8 +41,7 @@ pub async fn start_server() -> Fallible<()> {
     let router: Router<ServerState> = Router::new();
 
     let router = AllView::route(router);
-    let router = EditDayView::route(router);
-    let router = GetDayView::route(router);
+    let router = DayController::route(router);
     let router = IndexView::route(router);
     let router = SearchView::route(router);
     let router = StatsView::route(router);
