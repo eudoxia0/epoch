@@ -4,15 +4,12 @@ use axum::extract::State;
 use axum::response::Html;
 use axum::routing::get;
 use http::StatusCode;
-use maud::Markup;
-use maud::html;
 use rusqlite::Connection;
 use rusqlite::Transaction;
 use tokio::sync::MutexGuard;
 
 use crate::error::Fallible;
 use crate::server::ServerState;
-use crate::templates::page_template;
 
 pub struct StatsView {}
 
@@ -28,18 +25,15 @@ impl StatsView {
     async fn handler(State(state): State<ServerState>) -> Fallible<(StatusCode, Html<String>)> {
         let mut db: MutexGuard<'_, Connection> = state.db.lock().await;
         let tx: Transaction<'_> = db.transaction()?;
-        let body: Markup = html! {
-            .stats-page {
-                p {
-                    "Entries: " (count_entries(&tx)?)
-                }
-                p {
-                    "Words: " (count_words(&tx)?)
-                }
-            }
+        let title: &str = "Stats";
+        let entries: i32 = count_entries(&tx)?;
+        let words: i32 = count_words(&tx)?;
+        let tmpl: StatsIndexTemplate = StatsIndexTemplate {
+            title,
+            entries,
+            words,
         };
-        let html = page_template("Stats", None, body);
-        Ok((StatusCode::OK, Html(html.into_string())))
+        Ok((StatusCode::OK, Html(tmpl.render()?)))
     }
 }
 

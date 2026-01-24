@@ -57,6 +57,12 @@ impl From<ParseIntError> for AppError {
     }
 }
 
+impl From<askama::Error> for AppError {
+    fn from(value: askama::Error) -> Self {
+        AppError::new(format!("askama: {value}"))
+    }
+}
+
 impl IntoResponse for AppError {
     fn into_response(self) -> Response {
         let msg = self.to_string();
