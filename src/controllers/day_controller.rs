@@ -65,7 +65,7 @@ impl DayController {
         let weekday = date.weekday();
         let tmpl = DayViewTemplate {
             title: &date.humanize(),
-            weekday: &weekday.to_string(),
+            weekday,
             has_entry,
             content: &content,
             edit_url: &DayController::url_edit(date),
