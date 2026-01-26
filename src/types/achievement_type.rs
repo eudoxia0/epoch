@@ -14,8 +14,6 @@ pub enum AchievementType {
     FinishedBook,
     /// Completed a project.
     CompletedProject,
-    /// Went to the gym.
-    Gym,
     /// Did something unpleasant but necessary.
     AteTheFrog,
     /// Reached inbox zero.
@@ -27,7 +25,6 @@ impl AchievementType {
         match self {
             Self::FinishedBook => "finished_book",
             Self::CompletedProject => "completed_project",
-            Self::Gym => "gym",
             Self::AteTheFrog => "frog",
             Self::InboxZero => "inbox_zero",
         }
@@ -37,7 +34,6 @@ impl AchievementType {
         match self {
             Self::FinishedBook => "📚️",
             Self::CompletedProject => "🎨",
-            Self::Gym => "💪",
             Self::AteTheFrog => "🐸",
             Self::InboxZero => "📧",
         }
@@ -47,7 +43,6 @@ impl AchievementType {
         match self {
             Self::FinishedBook => "Finished a book",
             Self::CompletedProject => "Completed a project",
-            Self::Gym => "Went to the gym",
             Self::AteTheFrog => "Ate the frog",
             Self::InboxZero => "Reached inbox zero",
         }
@@ -61,7 +56,6 @@ impl TryFrom<&str> for AchievementType {
         match value {
             "finished_book" => Ok(Self::FinishedBook),
             "completed_project" => Ok(Self::CompletedProject),
-            "gym" => Ok(Self::Gym),
             "frog" => Ok(Self::AteTheFrog),
             "inbox_zero" => Ok(Self::InboxZero),
             _ => Err(AppError::new(format!(
