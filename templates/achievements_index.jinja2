@@ -14,32 +14,42 @@
         {% if achievements.is_empty() %}
             <p class="no-achievements">No achievements yet. Start logging your victories!</p>
         {% else %}
-            <div class="achievements-list">
-                {% for achievement in achievements %}
-                    <div class="achievement-card">
-                        <div class="achievement-header">
-                            <div class="achievement-icon">{{ achievement.achievement_type.icon() }}</div>
-                            <div class="achievement-meta">
-                                <div class="achievement-title">{{ achievement.achievement_type.title() }}</div>
-                                <div class="achievement-date">{{ achievement.date.humanize() }}</div>
-                            </div>
-                            <div class="achievement-actions">
-                                <a href="/achievements/{{ achievement.achievement_id }}/edit" class="edit-button">
-                                    <div class="icon">✏️</div>
-                                </a>
-                                <form method="POST" action="/achievements/{{ achievement.achievement_id }}/delete" class="delete-form">
-                                    <button type="submit" class="delete-button">
-                                        <div class="icon">🗑️</div>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="achievement-content rich-text">
-                            {{ achievement.content.as_html()?|safe }}
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
+            <table class="achievements-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Content</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for achievement in achievements %}
+                        <tr>
+                            <td class="achievement-date">{{ achievement.date.humanize() }}</td>
+                            <td>
+                                <div class="achievement-type">
+                                    <span class="achievement-icon">{{ achievement.achievement_type.icon() }}</span>
+                                    <span class="achievement-title">{{ achievement.achievement_type.title() }}</span>
+                                </div>
+                            </td>
+                            <td class="achievement-content rich-text">{{ achievement.content.as_html()?|safe }}</td>
+                            <td>
+                                <div class="achievement-actions">
+                                    <a href="/achievements/{{ achievement.achievement_id }}/edit" class="edit-button">
+                                        <div class="icon">✏️</div>
+                                    </a>
+                                    <form method="POST" action="/achievements/{{ achievement.achievement_id }}/delete" class="delete-form">
+                                        <button type="submit" class="delete-button">
+                                            <div class="icon">🗑️</div>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         {% endif %}
     </div>
     <style>
@@ -54,87 +64,78 @@
                 font-style: italic;
             }
 
-            .achievements-list {
-                display: flex;
-                flex-direction: column;
-                gap: 12px;
-            }
+            .achievements-table {
+                width: 100%;
+                border-collapse: collapse;
 
-            .achievement-card {
-                border: 1px solid #e4e4e4;
-                padding: 16px;
+                th, td {
+                    border: 1px solid #ddd;
+                    padding: 4px 8px;
+                    vertical-align: center;
+                }
 
-                .achievement-header {
-                    display: flex;
-                    align-items: center;
-                    gap: 12px;
-                    margin-bottom: 12px;
-
-                    .achievement-icon {
-                        font-size: 24px;
-                    }
-
-                    .achievement-meta {
-                        flex: 1;
-
-                        .achievement-title {
-                            font-size: 16px;
-                            font-weight: 600;
-                            color: #000;
-                        }
-
-                        .achievement-date {
-                            font-size: 14px;
-                            color: #666;
-                            margin-top: 2px;
-                        }
-                    }
-
-                    .achievement-actions {
-                        display: flex;
-                        gap: 8px;
-
-                        .edit-button {
-                            background: white;
-                            border: 1px solid #999;
-                            cursor: pointer;
-                            padding: 4px 8px;
-                            box-shadow: #ccc 0px 1px 2px 0px;
-                            text-decoration: none;
-                            display: flex;
-                            align-items: center;
-
-                            &:hover {
-                                border-color: #000;
-                            }
-
-                            .icon {
-                                font-size: 18px;
-                            }
-                        }
-
-                        .delete-form {
-                            .delete-button {
-                                background: white;
-                                border: 1px solid #999;
-                                cursor: pointer;
-                                padding: 4px 8px;
-                                box-shadow: #ccc 0px 1px 2px 0px;
-
-                                &:hover {
-                                    border-color: #000;
-                                }
-
-                                .icon {
-                                    font-size: 18px;
-                                }
-                            }
-                        }
+                thead {
+                    th {
+                        text-align: center;
+                        font-weight: bold;
                     }
                 }
 
-                .achievement-content {
-                    color: #000;
+                tbody {
+                    tr {
+                        .achievement-type {
+                            display: flex;
+                            flex-direction: row;
+                            gap: 8px;
+                            justify-content: start;
+                            align-items: center;
+
+                            .achievement-icon {
+                                font-size: 20px;
+                            }
+
+                            .achievement-title {
+                                white-space: nowrap;
+                            }
+                        }
+
+                        .achievement-date {
+                            color: #666;
+                            white-space: nowrap;
+                        }
+
+                        .achievement-actions {
+                            display: flex;
+                            flex-direction: row;
+                            gap: 8px;
+                            justify-content: start;
+
+                            .edit-button {
+                                background: white;
+                                border: 1px solid #999;
+                                cursor: pointer;
+                                padding: 2px 6px;
+                                text-decoration: none;
+
+                                .icon {
+                                    font-size: 16px;
+                                }
+                            }
+
+                            .delete-form {
+                                .delete-button {
+                                    background: white;
+                                    border: 1px solid #999;
+                                    cursor: pointer;
+                                    padding: 2px 6px;
+
+                                    .icon {
+                                        font-size: 16px;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
