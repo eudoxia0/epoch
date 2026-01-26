@@ -1,5 +1,113 @@
 {% extends "_base.jinja2" %}
 
+{% block controls %}
+    <div class="page-controls">
+        <a class="button" href="/achievements/new">
+            <div class="icon">➕</div>
+            New Achievement
+        </a>
+    </div>
+{% endblock %}
+
 {% block content %}
-    TODO
+    <div class="achievements-page">
+        {% if achievements.is_empty() %}
+            <p class="no-achievements">No achievements yet. Start logging your victories!</p>
+        {% else %}
+            <div class="achievements-list">
+                {% for achievement in achievements %}
+                    <div class="achievement-card">
+                        <div class="achievement-header">
+                            <div class="achievement-icon">{{ achievement.achievement_type.icon() }}</div>
+                            <div class="achievement-meta">
+                                <div class="achievement-title">{{ achievement.achievement_type.title() }}</div>
+                                <div class="achievement-date">{{ achievement.date.humanize() }}</div>
+                            </div>
+                            <form method="POST" action="/achievements/{{ achievement.achievement_id }}/delete" class="delete-form">
+                                <button type="submit" class="delete-button">
+                                    <div class="icon">🗑️</div>
+                                </button>
+                            </form>
+                        </div>
+                        <div class="achievement-content rich-text">
+                            {{ achievement.content.as_html()?|safe }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    <style>
+        .achievements-page {
+            padding: 24px 96px;
+
+            .no-achievements {
+                text-align: center;
+                color: #666;
+                font-size: 18px;
+                margin-top: 48px;
+                font-style: italic;
+            }
+
+            .achievements-list {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .achievement-card {
+                border: 1px solid #e4e4e4;
+                padding: 16px;
+
+                .achievement-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    margin-bottom: 12px;
+
+                    .achievement-icon {
+                        font-size: 24px;
+                    }
+
+                    .achievement-meta {
+                        flex: 1;
+
+                        .achievement-title {
+                            font-size: 16px;
+                            font-weight: 600;
+                            color: #000;
+                        }
+
+                        .achievement-date {
+                            font-size: 14px;
+                            color: #666;
+                            margin-top: 2px;
+                        }
+                    }
+
+                    .delete-form {
+                        .delete-button {
+                            background: white;
+                            border: 1px solid #999;
+                            cursor: pointer;
+                            padding: 4px 8px;
+                            box-shadow: #ccc 0px 1px 2px 0px;
+
+                            &:hover {
+                                border-color: #000;
+                            }
+
+                            .icon {
+                                font-size: 18px;
+                            }
+                        }
+                    }
+                }
+
+                .achievement-content {
+                    color: #000;
+                }
+            }
+        }
+    </style>
 {% endblock %}

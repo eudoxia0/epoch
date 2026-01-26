@@ -18,6 +18,8 @@ pub enum AchievementType {
     Gym,
     /// Did something unpleasant but necessary.
     AteTheFrog,
+    /// Reached inbox zero.
+    InboxZero,
 }
 
 impl AchievementType {
@@ -27,6 +29,7 @@ impl AchievementType {
             Self::CompletedProject => "completed_project",
             Self::Gym => "gym",
             Self::AteTheFrog => "frog",
+            Self::InboxZero => "inbox_zero",
         }
     }
 
@@ -36,6 +39,7 @@ impl AchievementType {
             Self::CompletedProject => "🎨",
             Self::Gym => "💪",
             Self::AteTheFrog => "🐸",
+            Self::InboxZero => "📧",
         }
     }
 
@@ -45,6 +49,7 @@ impl AchievementType {
             Self::CompletedProject => "Completed a project",
             Self::Gym => "Went to the gym",
             Self::AteTheFrog => "Ate the frog",
+            Self::InboxZero => "Reached inbox zero",
         }
     }
 }
@@ -58,6 +63,7 @@ impl TryFrom<&str> for AchievementType {
             "completed_project" => Ok(Self::CompletedProject),
             "gym" => Ok(Self::Gym),
             "frog" => Ok(Self::AteTheFrog),
+            "inbox_zero" => Ok(Self::InboxZero),
             _ => Err(AppError::new(format!(
                 "Invalid value for AchievementType: '{value}'."
             ))),

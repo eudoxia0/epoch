@@ -14,6 +14,7 @@ use serde::Deserialize;
 use tokio::sync::MutexGuard;
 
 use crate::error::Fallible;
+use crate::models::Achievement;
 use crate::models::DayEntry;
 use crate::server::ServerState;
 use crate::types::Date;
@@ -60,6 +61,7 @@ impl DayController {
             Some(day_entry) => (true, day_entry.content.as_html()?),
             None => (false, String::new()),
         };
+        let achievements = Achievement::list_by_date(&tx, date)?;
         let weekday = date.weekday();
         let tmpl = DayViewTemplate {
             title: &date.humanize(),
@@ -67,6 +69,7 @@ impl DayController {
             has_entry,
             content: &content,
             edit_url: &DayController::url_edit(date),
+            achievements: &achievements,
         };
         Ok((StatusCode::OK, Html(tmpl.render()?)))
     }
@@ -120,6 +123,7 @@ struct DayViewTemplate<'a> {
     has_entry: bool,
     content: &'a str,
     edit_url: &'a str,
+    achievements: &'a [Achievement],
 }
 
 #[derive(Template)]

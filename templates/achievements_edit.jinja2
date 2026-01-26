@@ -1,6 +1,88 @@
 {% extends "_base.jinja2" %}
 
+{% block controls %}
+    <div class="page-controls">
+        <a class="button" href="/achievements">
+            <div class="icon">🔙</div>
+            Back
+        </a>
+    </div>
+{% endblock %}
+
 {% block content %}
-    {# note to claude: the achievement type should be presented as a <select> #}
-    TODO
+    <div class="edit-achievement-page">
+        <form class="achievement-form" method="POST">
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" id="date" name="date" value="{{ date }}" required />
+            </div>
+
+            <div class="form-group">
+                <label for="achievement_type">Achievement Type</label>
+                <select id="achievement_type" name="achievement_type" required>
+                    <option value="finished_book">📚️ Finished a book</option>
+                    <option value="completed_project">🎨 Completed a project</option>
+                    <option value="gym">💪 Went to the gym</option>
+                    <option value="frog">🐸 Ate the frog</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="content">Description (Markdown)</label>
+                <textarea id="content" name="content" rows="10" autofocus required></textarea>
+            </div>
+
+            <button type="submit" class="button">
+                <div class="icon">💾</div>
+                Save Achievement
+            </button>
+        </form>
+    </div>
+    <style>
+        .edit-achievement-page {
+            padding: 24px 96px;
+
+            .achievement-form {
+                display: flex;
+                flex-direction: column;
+                gap: 24px;
+                max-width: 800px;
+
+                .form-group {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+
+                    label {
+                        font-weight: 600;
+                        color: #000;
+                    }
+
+                    input[type="date"],
+                    select,
+                    textarea {
+                        padding: 8px;
+                        border: 1px solid #999;
+                        font-size: 16px;
+                        font-family: inherit;
+
+                        &:focus {
+                            outline: none;
+                            border-color: #000;
+                        }
+                    }
+
+                    select {
+                        cursor: pointer;
+                    }
+
+                    textarea {
+                        resize: vertical;
+                        font-family: "TeX Gyre Cursor";
+                        min-height: 300px;
+                    }
+                }
+            }
+        }
+    </style>
 {% endblock %}

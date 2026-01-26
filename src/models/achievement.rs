@@ -27,16 +27,85 @@ impl Achievement {
         achievement_type: AchievementType,
         content: RichText,
     ) -> Fallible<AchievementId> {
-        todo!()
+        let sql = "
+            insert into achievements
+                (date, achievement_type, content)
+            values
+                (?1, ?2, ?3);
+        ";
+        tx.execute(sql, rusqlite::params![date, achievement_type, content])?;
+        let achievement_id = AchievementId::new(tx.last_insert_rowid() as i32);
+        Ok(achievement_id)
     }
 
     /// List all achievements in most-recent-first order.
     pub fn list(tx: &Transaction<'_>) -> Fallible<Vec<Achievement>> {
-        todo!()
+        let sql = "
+            select
+                achievement_id,
+                date,
+                achievement_type,
+                content
+            from
+                achievements
+            order by
+                date desc,
+                achievement_id desc;
+        ";
+        let mut stmt = tx.prepare(sql)?;
+        let rows = stmt.query_map(rusqlite::params![], |row| {
+            Ok(Achievement {
+                achievement_id: row.get(0)?,
+                date: row.get(1)?,
+                achievement_type: row.get(2)?,
+                content: row.get(3)?,
+            })
+        })?;
+        let mut achievements = Vec::new();
+        for achievement in rows {
+            achievements.push(achievement?);
+        }
+        Ok(achievements)
+    }
+
+    /// List all achievements for a specific date.
+    pub fn list_by_date(tx: &Transaction<'_>, date: Date) -> Fallible<Vec<Achievement>> {
+        let sql = "
+            select
+                achievement_id,
+                date,
+                achievement_type,
+                content
+            from
+                achievements
+            where
+                date = ?1
+            order by
+                achievement_id asc;
+        ";
+        let mut stmt = tx.prepare(sql)?;
+        let rows = stmt.query_map(rusqlite::params![date], |row| {
+            Ok(Achievement {
+                achievement_id: row.get(0)?,
+                date: row.get(1)?,
+                achievement_type: row.get(2)?,
+                content: row.get(3)?,
+            })
+        })?;
+        let mut achievements = Vec::new();
+        for achievement in rows {
+            achievements.push(achievement?);
+        }
+        Ok(achievements)
     }
 
     /// Delete an achievement.
     pub fn delete(tx: &Transaction<'_>, achievement_id: AchievementId) -> Fallible<()> {
-        todo!()
+        let sql = "
+            delete from achievements
+            where achievement_id = ?1;
+        ";
+        tx.execute(sql, rusqlite::params![achievement_id])?;
+        Ok(())
     }
 }
