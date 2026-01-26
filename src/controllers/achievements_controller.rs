@@ -2,6 +2,7 @@ use askama::Template;
 use axum::Form;
 use axum::Router;
 use axum::extract::Path;
+use axum::extract::Query;
 use axum::extract::State;
 use axum::response::Html;
 use axum::response::Redirect;
@@ -43,11 +44,14 @@ impl AchievementsController {
         Ok((StatusCode::OK, Html(tmpl.render()?)))
     }
 
-    async fn new(State(_state): State<ServerState>) -> Fallible<(StatusCode, Html<String>)> {
-        let today = Date::today();
+    async fn new(
+        State(_state): State<ServerState>,
+        Query(params): Query<NewQueryParams>,
+    ) -> Fallible<(StatusCode, Html<String>)> {
+        let date = params.date.unwrap_or_else(|| Date::today());
         let tmpl = AchievementsEditTemplate {
             title: "New Achievement",
-            date: &today.to_string(),
+            date: &date.to_string(),
         };
         Ok((StatusCode::OK, Html(tmpl.render()?)))
     }
@@ -81,6 +85,11 @@ impl AchievementsController {
         tx.commit()?;
         Ok(Redirect::to("/achievements"))
     }
+}
+
+#[derive(Deserialize)]
+struct NewQueryParams {
+    date: Option<Date>,
 }
 
 #[derive(Deserialize)]

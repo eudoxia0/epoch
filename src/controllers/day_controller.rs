@@ -70,6 +70,7 @@ impl DayController {
             content: &content,
             edit_url: &DayController::url_edit(date),
             achievements: &achievements,
+            date: &date.to_string(),
         };
         Ok((StatusCode::OK, Html(tmpl.render()?)))
     }
@@ -124,6 +125,7 @@ struct DayViewTemplate<'a> {
     content: &'a str,
     edit_url: &'a str,
     achievements: &'a [Achievement],
+    date: &'a str,
 }
 
 #[derive(Template)]
