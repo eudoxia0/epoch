@@ -99,6 +99,54 @@ impl Achievement {
         Ok(achievements)
     }
 
+    /// Get a single achievement by ID.
+    pub fn get(tx: &Transaction<'_>, achievement_id: AchievementId) -> Fallible<Achievement> {
+        let sql = "
+            select
+                achievement_id,
+                date,
+                achievement_type,
+                content
+            from
+                achievements
+            where
+                achievement_id = ?1;
+        ";
+        let achievement = tx.query_row(sql, rusqlite::params![achievement_id], |row| {
+            Ok(Achievement {
+                achievement_id: row.get(0)?,
+                date: row.get(1)?,
+                achievement_type: row.get(2)?,
+                content: row.get(3)?,
+            })
+        })?;
+        Ok(achievement)
+    }
+
+    /// Update an existing achievement.
+    pub fn update(
+        tx: &Transaction<'_>,
+        achievement_id: AchievementId,
+        date: Date,
+        achievement_type: AchievementType,
+        content: RichText,
+    ) -> Fallible<()> {
+        let sql = "
+            update achievements
+            set
+                date = ?2,
+                achievement_type = ?3,
+                content = ?4
+            where
+                achievement_id = ?1;
+        ";
+        tx.execute(
+            sql,
+            rusqlite::params![achievement_id, date, achievement_type, content],
+        )?;
+        Ok(())
+    }
+
     /// Delete an achievement.
     pub fn delete(tx: &Transaction<'_>, achievement_id: AchievementId) -> Fallible<()> {
         let sql = "

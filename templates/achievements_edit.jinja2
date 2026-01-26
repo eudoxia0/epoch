@@ -20,16 +20,16 @@
             <div class="form-group">
                 <label for="achievement_type">Achievement Type</label>
                 <select id="achievement_type" name="achievement_type" required>
-                    <option value="finished_book">📚️ Finished a book</option>
-                    <option value="completed_project">🎨 Completed a project</option>
-                    <option value="frog">🐸 Ate the frog</option>
-                    <option value="frog">📧 Reached inbox zero</option>
+                    <option value="finished_book" {% if achievement_type == Some("finished_book") %}selected{% endif %}>📚️ Finished a book</option>
+                    <option value="completed_project" {% if achievement_type == Some("completed_project") %}selected{% endif %}>🎨 Completed a project</option>
+                    <option value="frog" {% if achievement_type == Some("frog") %}selected{% endif %}>🐸 Ate the frog</option>
+                    <option value="inbox_zero" {% if achievement_type == Some("inbox_zero") %}selected{% endif %}>📧 Reached inbox zero</option>
                 </select>
             </div>
 
             <div class="form-group">
                 <label for="content">Description (Markdown)</label>
-                <textarea id="content" name="content" rows="10" autofocus required></textarea>
+                <textarea id="content" name="content" rows="10" autofocus required>{% if let Some(c) = content %}{{ c }}{% endif %}</textarea>
             </div>
 
             <button type="submit" class="button">

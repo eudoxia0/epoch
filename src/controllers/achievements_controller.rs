@@ -30,6 +30,8 @@ impl AchievementsController {
             .route("/achievements", get(Self::index))
             .route("/achievements/new", get(Self::new))
             .route("/achievements/new", post(Self::create))
+            .route("/achievements/{achievement_id}/edit", get(Self::edit))
+            .route("/achievements/{achievement_id}/edit", post(Self::update))
             .route("/achievements/{achievement_id}/delete", post(Self::delete))
     }
 
@@ -52,6 +54,8 @@ impl AchievementsController {
         let tmpl = AchievementsEditTemplate {
             title: "New Achievement",
             date: &date.to_string(),
+            achievement_type: None,
+            content: None,
         };
         Ok((StatusCode::OK, Html(tmpl.render()?)))
     }
@@ -66,11 +70,52 @@ impl AchievementsController {
             content,
         } = form;
         let date: Date = Date::try_from(date)?;
-        let achievement_type: AchievementType = AchievementType::try_from(achievement_type.as_str())?;
+        let achievement_type: AchievementType =
+            AchievementType::try_from(achievement_type.as_str())?;
         let content: RichText = RichText::new(content)?;
         let mut db: MutexGuard<'_, Connection> = state.db.lock().await;
         let tx: Transaction<'_> = db.transaction()?;
         Achievement::create(&tx, date, achievement_type, content)?;
+        tx.commit()?;
+        Ok(Redirect::to("/achievements"))
+    }
+
+    async fn edit(
+        State(state): State<ServerState>,
+        Path(achievement_id): Path<AchievementId>,
+    ) -> Fallible<(StatusCode, Html<String>)> {
+        let mut db: MutexGuard<'_, Connection> = state.db.lock().await;
+        let tx: Transaction<'_> = db.transaction()?;
+        let achievement = Achievement::get(&tx, achievement_id)?;
+        let date = achievement.date.to_string();
+        let achievement_type = achievement.achievement_type.as_str();
+        let content = achievement.content.as_str();
+        let tmpl = AchievementsEditTemplate {
+            title: "Edit Achievement",
+            date: &date,
+            achievement_type: Some(achievement_type),
+            content: Some(content),
+        };
+        Ok((StatusCode::OK, Html(tmpl.render()?)))
+    }
+
+    async fn update(
+        State(state): State<ServerState>,
+        Path(achievement_id): Path<AchievementId>,
+        Form(form): Form<UpdateForm>,
+    ) -> Fallible<Redirect> {
+        let UpdateForm {
+            date,
+            achievement_type,
+            content,
+        } = form;
+        let date: Date = Date::try_from(date)?;
+        let achievement_type: AchievementType =
+            AchievementType::try_from(achievement_type.as_str())?;
+        let content: RichText = RichText::new(content)?;
+        let mut db: MutexGuard<'_, Connection> = state.db.lock().await;
+        let tx: Transaction<'_> = db.transaction()?;
+        Achievement::update(&tx, achievement_id, date, achievement_type, content)?;
         tx.commit()?;
         Ok(Redirect::to("/achievements"))
     }
@@ -99,6 +144,13 @@ struct CreateForm {
     content: String,
 }
 
+#[derive(Deserialize)]
+struct UpdateForm {
+    date: String,
+    achievement_type: String,
+    content: String,
+}
+
 #[derive(Template)]
 #[template(path = "achievements_index.jinja2")]
 struct AchievementsIndexTemplate<'a> {
@@ -111,4 +163,6 @@ struct AchievementsIndexTemplate<'a> {
 struct AchievementsEditTemplate<'a> {
     title: &'a str,
     date: &'a str,
+    achievement_type: Option<&'a str>,
+    content: Option<&'a str>,
 }

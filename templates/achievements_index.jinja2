@@ -23,11 +23,16 @@
                                 <div class="achievement-title">{{ achievement.achievement_type.title() }}</div>
                                 <div class="achievement-date">{{ achievement.date.humanize() }}</div>
                             </div>
-                            <form method="POST" action="/achievements/{{ achievement.achievement_id }}/delete" class="delete-form">
-                                <button type="submit" class="delete-button">
-                                    <div class="icon">🗑️</div>
-                                </button>
-                            </form>
+                            <div class="achievement-actions">
+                                <a href="/achievements/{{ achievement.achievement_id }}/edit" class="edit-button">
+                                    <div class="icon">✏️</div>
+                                </a>
+                                <form method="POST" action="/achievements/{{ achievement.achievement_id }}/delete" class="delete-form">
+                                    <button type="submit" class="delete-button">
+                                        <div class="icon">🗑️</div>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                         <div class="achievement-content rich-text">
                             {{ achievement.content.as_html()?|safe }}
@@ -85,13 +90,19 @@
                         }
                     }
 
-                    .delete-form {
-                        .delete-button {
+                    .achievement-actions {
+                        display: flex;
+                        gap: 8px;
+
+                        .edit-button {
                             background: white;
                             border: 1px solid #999;
                             cursor: pointer;
                             padding: 4px 8px;
                             box-shadow: #ccc 0px 1px 2px 0px;
+                            text-decoration: none;
+                            display: flex;
+                            align-items: center;
 
                             &:hover {
                                 border-color: #000;
@@ -99,6 +110,24 @@
 
                             .icon {
                                 font-size: 18px;
+                            }
+                        }
+
+                        .delete-form {
+                            .delete-button {
+                                background: white;
+                                border: 1px solid #999;
+                                cursor: pointer;
+                                padding: 4px 8px;
+                                box-shadow: #ccc 0px 1px 2px 0px;
+
+                                &:hover {
+                                    border-color: #000;
+                                }
+
+                                .icon {
+                                    font-size: 18px;
+                                }
                             }
                         }
                     }
