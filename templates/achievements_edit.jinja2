@@ -12,6 +12,9 @@
 {% block content %}
     <div class="edit-achievement-page">
         <form class="achievement-form" method="POST">
+            {% if let Some(url) = return_url %}
+                <input type="hidden" name="return_url" value="{{ url }}" />
+            {% endif %}
             <div class="form-group">
                 <label for="date">Date</label>
                 <input type="date" id="date" name="date" value="{{ date }}" required />

@@ -51,11 +51,13 @@ impl AchievementsController {
         Query(params): Query<NewQueryParams>,
     ) -> Fallible<(StatusCode, Html<String>)> {
         let date = params.date.unwrap_or_else(|| Date::today());
+        let return_url = params.return_url.as_deref();
         let tmpl = AchievementsEditTemplate {
             title: "New Achievement",
             date: &date.to_string(),
             achievement_type: None,
             content: None,
+            return_url,
         };
         Ok((StatusCode::OK, Html(tmpl.render()?)))
     }
@@ -68,6 +70,7 @@ impl AchievementsController {
             date,
             achievement_type,
             content,
+            return_url,
         } = form;
         let date: Date = Date::try_from(date)?;
         let achievement_type: AchievementType =
@@ -77,7 +80,8 @@ impl AchievementsController {
         let tx: Transaction<'_> = db.transaction()?;
         Achievement::create(&tx, date, achievement_type, content)?;
         tx.commit()?;
-        Ok(Redirect::to("/achievements"))
+        let redirect_url = return_url.as_deref().unwrap_or("/achievements");
+        Ok(Redirect::to(redirect_url))
     }
 
     async fn edit(
@@ -95,6 +99,7 @@ impl AchievementsController {
             date: &date,
             achievement_type: Some(achievement_type),
             content: Some(content),
+            return_url: None,
         };
         Ok((StatusCode::OK, Html(tmpl.render()?)))
     }
@@ -135,6 +140,7 @@ impl AchievementsController {
 #[derive(Deserialize)]
 struct NewQueryParams {
     date: Option<Date>,
+    return_url: Option<String>,
 }
 
 #[derive(Deserialize)]
@@ -142,6 +148,7 @@ struct CreateForm {
     date: String,
     achievement_type: String,
     content: String,
+    return_url: Option<String>,
 }
 
 #[derive(Deserialize)]
@@ -165,4 +172,5 @@ struct AchievementsEditTemplate<'a> {
     date: &'a str,
     achievement_type: Option<&'a str>,
     content: Option<&'a str>,
+    return_url: Option<&'a str>,
 }
