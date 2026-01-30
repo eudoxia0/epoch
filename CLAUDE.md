@@ -63,17 +63,20 @@ tx.commit()?; // Or let it drop for implicit rollback
 Controller methods follow Rails-style RESTful naming:
 
 **Standard CRUD actions:**
+
 - `index` - List all resources (GET /resource)
-- `new` - Form to create a new resource (GET /resource/new)
-- `create` - Handle creation form submission (POST /resource/new)
+- `create_get` - Form to create a new resource (GET /resource/new)
+- `create_post` - Handle creation form submission (POST /resource/new)
 - `show` - Display a single resource (GET /resource/{id})
-- `edit` - Form to edit a resource (GET /resource/{id}/edit)
-- `update` - Handle edit form submission (POST /resource/{id}/edit)
+- `edit_get` - Form to edit a resource (GET /resource/{id}/edit)
+- `edit_post` - Handle edit form submission (POST /resource/{id}/edit)
 - `delete` - Delete a resource (POST /resource/{id}/delete)
 
 **Custom actions:**
+
 - Use descriptive names (e.g., `today`, `yesterday`, `not_found`)
 
 **URL helper methods:**
+
 - Prefix with `url_` (e.g., `url_show`, `url_edit`)
 - Return String containing the path

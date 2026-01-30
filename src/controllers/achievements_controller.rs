@@ -28,10 +28,10 @@ impl AchievementsController {
     pub fn route(router: Router<ServerState>) -> Router<ServerState> {
         router
             .route("/achievements", get(Self::index))
-            .route("/achievements/new", get(Self::new))
-            .route("/achievements/new", post(Self::create))
-            .route("/achievements/{achievement_id}/edit", get(Self::edit))
-            .route("/achievements/{achievement_id}/edit", post(Self::update))
+            .route("/achievements/new", get(Self::create_get))
+            .route("/achievements/new", post(Self::create_post))
+            .route("/achievements/{achievement_id}/edit", get(Self::edit_get))
+            .route("/achievements/{achievement_id}/edit", post(Self::edit_post))
             .route("/achievements/{achievement_id}/delete", post(Self::delete))
     }
 
@@ -46,7 +46,7 @@ impl AchievementsController {
         Ok((StatusCode::OK, Html(tmpl.render()?)))
     }
 
-    async fn new(
+    async fn create_get(
         State(_state): State<ServerState>,
         Query(params): Query<NewQueryParams>,
     ) -> Fallible<(StatusCode, Html<String>)> {
@@ -62,7 +62,7 @@ impl AchievementsController {
         Ok((StatusCode::OK, Html(tmpl.render()?)))
     }
 
-    async fn create(
+    async fn create_post(
         State(state): State<ServerState>,
         Form(form): Form<CreateForm>,
     ) -> Fallible<Redirect> {
@@ -84,7 +84,7 @@ impl AchievementsController {
         Ok(Redirect::to(redirect_url))
     }
 
-    async fn edit(
+    async fn edit_get(
         State(state): State<ServerState>,
         Path(achievement_id): Path<AchievementId>,
     ) -> Fallible<(StatusCode, Html<String>)> {
@@ -104,7 +104,7 @@ impl AchievementsController {
         Ok((StatusCode::OK, Html(tmpl.render()?)))
     }
 
-    async fn update(
+    async fn edit_post(
         State(state): State<ServerState>,
         Path(achievement_id): Path<AchievementId>,
         Form(form): Form<UpdateForm>,

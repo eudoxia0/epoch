@@ -28,8 +28,8 @@ impl DayController {
             .route("/day/today", get(Self::today))
             .route("/day/yesterday", get(Self::yesterday))
             .route("/day/{date}", get(Self::show))
-            .route("/day/{date}/edit", get(Self::edit))
-            .route("/day/{date}/edit", post(Self::update))
+            .route("/day/{date}/edit", get(Self::edit_get))
+            .route("/day/{date}/edit", post(Self::edit_post))
     }
 
     pub fn url_show(date: Date) -> String {
@@ -75,7 +75,7 @@ impl DayController {
         Ok((StatusCode::OK, Html(tmpl.render()?)))
     }
 
-    async fn edit(
+    async fn edit_get(
         State(state): State<ServerState>,
         Path(date): Path<Date>,
     ) -> Fallible<(StatusCode, Html<String>)> {
@@ -94,7 +94,7 @@ impl DayController {
         Ok((StatusCode::OK, Html(tmpl.render()?)))
     }
 
-    async fn update(
+    async fn edit_post(
         State(state): State<ServerState>,
         Path(date): Path<Date>,
         Form(form): Form<UpdateForm>,
