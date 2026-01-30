@@ -50,7 +50,7 @@ impl AchievementsController {
         State(_state): State<ServerState>,
         Query(params): Query<NewQueryParams>,
     ) -> Fallible<(StatusCode, Html<String>)> {
-        let date = params.date.unwrap_or_else(|| Date::today());
+        let date = params.date.unwrap_or_else(Date::today);
         let return_url = params.return_url.as_deref();
         let tmpl = AchievementsEditTemplate {
             title: "New Achievement",
