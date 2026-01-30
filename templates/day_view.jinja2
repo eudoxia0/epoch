@@ -23,19 +23,20 @@
 
 {% block content %}
     <div class="view-entry-page">
-        <p>
-            <i>{{ weekday }}</i>
-        </p>
-        {% if has_entry %}
-            <div class="rich-text">
-                {{ content|safe }}
-            </div>
-        {% else %}
+        <div class="main-area">
             <p>
-                <i>No entry for this date.</i>
+                <i>{{ weekday }}</i>
             </p>
-        {% endif %}
-
+            {% if has_entry %}
+                <div class="rich-text">
+                    {{ content|safe }}
+                </div>
+            {% else %}
+                <p>
+                    <i>No entry for this date.</i>
+                </p>
+            {% endif %}
+        </div>
         {% if !achievements.is_empty() %}
             <div class="achievements-section">
                 <h2 class="achievements-header">Achievements</h2>
@@ -91,20 +92,20 @@
         }
 
         .view-entry-page {
-            padding: 24px 96px;
             font-size: 16px;
-            height: 100%;
+
+            .main-area {
+                padding: 24px 96px;
+                height: 100%;
+            }
 
             .achievements-section {
-                margin-top: 48px;
-                padding-top: 24px;
+                padding: 24px 96px;
                 border-top: 1px solid #e4e4e4;
 
                 .achievements-header {
-                    font-size: 20px;
-                    font-weight: 600;
+                    font-size: 24px;
                     margin-bottom: 16px;
-                    color: #000;
                 }
 
                 .achievements-list {
