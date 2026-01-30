@@ -63,12 +63,16 @@ impl DayController {
         };
         let achievements = Achievement::list_by_date(&tx, date)?;
         let weekday = date.weekday();
+        let prev_url = DayController::url_show(date.previous());
+        let next_url = DayController::url_show(date.next());
         let tmpl = DayViewTemplate {
             title: &date.humanize(),
             weekday,
             has_entry,
             content: &content,
             edit_url: &DayController::url_edit(date),
+            prev_url,
+            next_url,
             achievements: &achievements,
             date: &date.to_string(),
         };
@@ -124,6 +128,8 @@ struct DayViewTemplate<'a> {
     has_entry: bool,
     content: &'a str,
     edit_url: &'a str,
+    prev_url: String,
+    next_url: String,
     achievements: &'a [Achievement],
     date: &'a str,
 }

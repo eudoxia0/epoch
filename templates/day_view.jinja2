@@ -1,5 +1,13 @@
 {% extends "_base.jinja2" %}
 
+{% block title_block %}
+    <div class="title-with-nav">
+        <a class="nav-link prev" href="{{ prev_url }}">«</a>
+        <h1>{{ title }}</h1>
+        <a class="nav-link next" href="{{ next_url }}">»</a>
+    </div>
+{% endblock %}
+
 {% block controls %}
     <div class="page-controls">
         <a class="button" href="{{ edit_url }}">
@@ -48,6 +56,40 @@
         {% endif %}
     </div>
     <style>
+        .title-with-nav {
+            position: relative;
+            display: inline-block;
+
+            h1 {
+                margin: 0;
+                display: inline;
+            }
+
+            .nav-link {
+                font-size: 36px;
+                text-decoration: none;
+                color: #666;
+                transition: color 0.2s;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+
+                &:hover {
+                    color: #000;
+                }
+
+                &.prev {
+                    right: 100%;
+                    margin-right: 12px;
+                }
+
+                &.next {
+                    left: 100%;
+                    margin-left: 12px;
+                }
+            }
+        }
+
         .view-entry-page {
             padding: 24px 96px;
             font-size: 16px;

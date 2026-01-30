@@ -32,6 +32,11 @@ impl Date {
         Self(self.0.pred_opt().unwrap_or(self.0))
     }
 
+    /// Return the date one day after this date.
+    pub fn next(self) -> Self {
+        Self(self.0.succ_opt().unwrap_or(self.0))
+    }
+
     pub fn year(self) -> i32 {
         self.0.year()
     }
