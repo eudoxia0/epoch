@@ -13,7 +13,13 @@ enum Command {
     /// Start a server.
     Serve,
     /// Import a day entry.
-    Import { path: PathBuf },
+    Import {
+        /// Path to the SQLite database.
+        #[arg(long)]
+        database: PathBuf,
+        /// Path to the Markdown file to import.
+        path: PathBuf,
+    },
 }
 
 /// The program entrypoint.
@@ -22,7 +28,7 @@ pub async fn entrypoint() -> ExitCode {
     let cmd: Command = Command::parse();
     let res: Fallible<()> = match cmd {
         Command::Serve => start_server().await,
-        Command::Import { path } => import_day_entry(path),
+        Command::Import { database, path } => import_day_entry(database, path),
     };
     match res {
         Ok(_) => ExitCode::SUCCESS,

@@ -1,7 +1,6 @@
 use std::fs;
 use std::path::PathBuf;
 
-use crate::config::Config;
 use crate::error::AppError;
 use crate::error::Fallible;
 use crate::models::DayEntry;
@@ -9,7 +8,7 @@ use crate::models::open_db;
 use crate::types::Date;
 use crate::types::RichText;
 
-pub fn import_day_entry(path: PathBuf) -> Fallible<()> {
+pub fn import_day_entry(database: PathBuf, path: PathBuf) -> Fallible<()> {
     // Path must point to a file that exists.
     if !path.exists() {
         return Err(AppError::new(format!(
@@ -42,8 +41,7 @@ pub fn import_day_entry(path: PathBuf) -> Fallible<()> {
     let rich_text = RichText::new(content)?;
 
     // Open database and check if entry exists.
-    let config = Config::from_env()?;
-    let mut db = open_db(&config.db_path)?;
+    let mut db = open_db(&database)?;
     let tx = db.transaction()?;
 
     if DayEntry::get_opt(&tx, date)?.is_some() {
