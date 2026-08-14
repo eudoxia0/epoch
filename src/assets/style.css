@@ -33,12 +33,12 @@ body {
                     align-items: center;
 
                     .icon {
-                        font-size: 28px;
+                        font-size: 22px;
                     }
 
                     .text {
                         padding-left: 12px;
-                        font-size: 24px;
+                        font-size: 20px;
                     }
                 }
             }
