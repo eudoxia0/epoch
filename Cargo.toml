@@ -8,7 +8,7 @@ homepage = "https://github.com/eudoxia0/epoch"
 repository = "https://github.com/eudoxia0/epoch"
 
 [dependencies]
-askama = "0.15.1"
+askama = "0.15.5"
 axum = { version = "0.8.8", features = ["form", "multipart"] }
 chrono = "0.4.43"
 clap = { version = "4.5.54", features = ["derive"] }
