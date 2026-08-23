@@ -38,7 +38,7 @@ pub fn import_day_entry(database: PathBuf, path: PathBuf) -> Fallible<()> {
 
     // Read file content.
     let content = fs::read_to_string(&path)?;
-    let rich_text = RichText::new(content)?;
+    let rich_text = RichText::new(content);
 
     // Open database and check if entry exists.
     let mut db = open_db(&database)?;
