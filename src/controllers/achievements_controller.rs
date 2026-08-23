@@ -75,7 +75,7 @@ impl AchievementsController {
         let date: Date = Date::try_from(date)?;
         let achievement_type: AchievementType =
             AchievementType::try_from(achievement_type.as_str())?;
-        let content: RichText = RichText::new(content)?;
+        let content: RichText = RichText::new(content);
         let mut db: MutexGuard<'_, Connection> = state.db.lock().await;
         let tx: Transaction<'_> = db.transaction()?;
         Achievement::create(&tx, date, achievement_type, content)?;
@@ -117,7 +117,7 @@ impl AchievementsController {
         let date: Date = Date::try_from(date)?;
         let achievement_type: AchievementType =
             AchievementType::try_from(achievement_type.as_str())?;
-        let content: RichText = RichText::new(content)?;
+        let content: RichText = RichText::new(content);
         let mut db: MutexGuard<'_, Connection> = state.db.lock().await;
         let tx: Transaction<'_> = db.transaction()?;
         Achievement::update(&tx, achievement_id, date, achievement_type, content)?;

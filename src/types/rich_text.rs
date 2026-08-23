@@ -2,26 +2,20 @@ use pulldown_cmark::Options;
 use pulldown_cmark::Parser;
 use rusqlite::ToSql;
 use rusqlite::types::FromSql;
-use rusqlite::types::FromSqlError;
 use rusqlite::types::FromSqlResult;
 use rusqlite::types::ToSqlOutput;
 use rusqlite::types::ValueRef;
 
-use crate::error::AppError;
 use crate::error::Fallible;
 
 /// Represents Markdown text.
 pub struct RichText(String);
 
 impl RichText {
-    /// Construct an entry text. Trims the string, and checks it is non-empty.
-    pub fn new(text: impl ToString) -> Fallible<Self> {
-        let text = text.to_string().trim().to_string();
-        if text.is_empty() {
-            Err(AppError::new("Entry text must be non-empty."))
-        } else {
-            Ok(Self(text))
-        }
+    /// Construct an entry text. Trims the string.
+    pub fn new(text: impl ToString) -> Self {
+        let text: String = text.to_string().trim().to_string();
+        Self(text)
     }
 
     pub fn as_str(&self) -> &str {
@@ -45,14 +39,6 @@ impl RichText {
     }
 }
 
-impl TryFrom<String> for RichText {
-    type Error = AppError;
-
-    fn try_from(value: String) -> Result<Self, Self::Error> {
-        RichText::new(value)
-    }
-}
-
 impl ToSql for RichText {
     fn to_sql(&self) -> rusqlite::Result<ToSqlOutput<'_>> {
         let str = self.as_str();
@@ -63,6 +49,6 @@ impl ToSql for RichText {
 impl FromSql for RichText {
     fn column_result(value: ValueRef<'_>) -> FromSqlResult<Self> {
         let string: String = FromSql::column_result(value)?;
-        RichText::new(string).map_err(|e| FromSqlError::Other(Box::new(e)))
+        Ok(RichText::new(string))
     }
 }
