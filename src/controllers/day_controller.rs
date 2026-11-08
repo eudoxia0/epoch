@@ -13,6 +13,7 @@ use rusqlite::Transaction;
 use serde::Deserialize;
 use tokio::sync::MutexGuard;
 
+use crate::db::DayEntryData;
 use crate::error::Fallible;
 use crate::models::Achievement;
 use crate::models::DayEntry;
@@ -54,14 +55,11 @@ impl DayController {
         State(state): State<ServerState>,
         Path(date): Path<Date>,
     ) -> Fallible<(StatusCode, Html<String>)> {
-        let mut db: MutexGuard<'_, Connection> = state.db.lock().await;
-        let tx: Transaction<'_> = db.transaction()?;
-        let maybe_day_entry: Option<DayEntry> = DayEntry::get_opt(&tx, date)?;
-        let (has_entry, content) = match maybe_day_entry {
-            Some(day_entry) => (true, day_entry.content.as_html()?),
-            None => (false, String::new()),
-        };
-        let achievements = Achievement::list_by_date(&tx, date)?;
+        let maybe_day_entry: Option<DayEntryData> = state.db2.get_day_entry(date).await?;
+        let has_entry: bool = maybe_day_entry.is_some();
+        let (content, achievements) = maybe_day_entry
+            .map(|de| (de.content, de.achievements))
+            .unwrap_or((RichText::new(""), vec![]));
         let weekday = date.weekday();
         let prev_url = DayController::url_show(date.previous());
         let next_url = DayController::url_show(date.next());
@@ -69,7 +67,7 @@ impl DayController {
             title: &date.humanize(),
             weekday,
             has_entry,
-            content: &content,
+            content: &content.as_html()?,
             edit_url: &DayController::url_edit(date),
             prev_url,
             next_url,

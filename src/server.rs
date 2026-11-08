@@ -14,6 +14,7 @@ use crate::controllers::DayController;
 use crate::controllers::RootController;
 use crate::controllers::SearchController;
 use crate::controllers::StatsController;
+use crate::db::Database;
 use crate::error::Fallible;
 use crate::models::open_db;
 
@@ -28,13 +29,16 @@ pub const CONTENT_TYPE_PNG: &str = "image/png";
 #[derive(Clone)]
 pub struct ServerState {
     pub db: Arc<Mutex<Connection>>,
+    pub db2: Database,
 }
 
 pub async fn start_server() -> Fallible<()> {
     let config = Config::from_env()?;
     let db: Connection = open_db(&config.db_path)?;
+    let db2: Database = Database::new(config.db_path.clone())?;
     let state: ServerState = ServerState {
         db: Arc::new(Mutex::new(db)),
+        db2,
     };
 
     // Build the router.
