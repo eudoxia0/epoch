@@ -6,6 +6,7 @@ mod assets;
 mod cli;
 mod config;
 mod controllers;
+mod db;
 mod error;
 mod import;
 mod models;
