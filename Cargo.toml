@@ -4,7 +4,6 @@ version = "0.1.0"
 edition = "2024"
 description = "A self-hosted journal app."
 license = "MIT"
-homepage = "https://github.com/eudoxia0/epoch"
 repository = "https://github.com/eudoxia0/epoch"
 
 [dependencies]
